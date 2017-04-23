@@ -23,12 +23,12 @@ def to_request_setoption(k,v):
 
 def to_request_deliver_tx(txbytes):
     r = types.Request()
-    r.deliver_tx = txbytes
+    r.deliver_tx.tx = txbytes
     return r
 
 def to_request_check_tx(txbytes):
     r = types.Request()
-    r.check_tx = txbytes
+    r.check_tx.tx = txbytes
     return r
 
 def to_request_commit():
@@ -36,15 +36,29 @@ def to_request_commit():
     r.commit.CopyFrom(types.RequestCommit())
     return r
 
+def to_request_query(path='/key', data=b'', height=0, prove=False):
+    r = types.Request()
+    r.query.path = path
+    r.query.data = data
+    r.query.prove = prove
+    r.query.height = height
+    return r
+
 
 ### Responses ###
+
+def to_response_exception(err):
+    r = types.Response()
+    r.exception = err
+    return r
+
+
 def to_response_echo(msg):
     r = types.Response()
     r.echo.message = msg
     return r
 
-
-def to_response_info(data='', version='', last_block_height=0, last_block_app_hash=''):
+def to_response_info(data='', version='', last_block_height=0, last_block_app_hash=b''):
     r = types.Response()
     r.info.data = data
     r.info.version = version
@@ -69,4 +83,9 @@ def to_response_check_tx(code, data, log):
     r.check_tx.code = code
     r.check_tx.data = data
     r.check_tx.log = log
+    return r
+
+def to_response_query(resQuery):
+    r = types.Response()
+    r.query.CopyFrom(resQuery)
     return r

@@ -14,7 +14,7 @@ def __structcodes(length):
 def uvarint_size(i):
     if i == 0:
         return 0
-    for j in xrange(1, 8):
+    for j in [1,2,3,4,5,6,7,8]:
         if i < 1 << j * 8:
             return j
     return 8
@@ -31,12 +31,13 @@ def write_varint(i, writer):
     big_end = struct.pack(__structcodes(8), i)
     if negate:
         size += 0xF0
-    writer.write(chr(size))
+    #writer.write(chr(size))
+    writer.write(bytes([size]))
     writer.write(big_end[(8-size):])
 
 def read_varint(reader):
     b = reader.read(1)
-    if b == '':
+    if len(b) == 0:
         return 0
 
     size = struct.unpack(__structcodes(1), b)[0]
@@ -64,14 +65,14 @@ def read_byte_slize(reader):
     return reader.read(length)
 
 def write_message(message):
-    buffer = BytesIO()
+    buffer = BytesIO(b'')
     bz = message.SerializeToString()
     write_byte_slice(bz, buffer)
     return buffer.getvalue()
 
 def read_message(reader, message):
     bsliced = read_byte_slize(reader)
-    if bsliced == '':
+    if len(bsliced) == 0:
         return None, 0
     m = message()
     m.ParseFromString(bsliced)

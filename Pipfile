@@ -2,9 +2,14 @@
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 
+[requires]
+python_version = '3.6'
+
 [packages]
 protobuf = "*"
-pytest = "*"
-pytest-pythonpath = "*"
 gevent = "*"
 crayons = "*"
+
+[dev-packages]
+pytest = "*"
+pytest-pythonpath = "*"
