@@ -83,7 +83,6 @@ In one terminal
 >> pipenv shell
 >> python counter.py
  ABCIServer started on port: 46658
- ... connection from: 127.0.0.1:51942 ...
 
 In another terminal
 >> abci-cli console
