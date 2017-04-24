@@ -58,12 +58,9 @@ def to_response_echo(msg):
     r.echo.message = msg
     return r
 
-def to_response_info(data='', version='', last_block_height=0, last_block_app_hash=b''):
+def to_response_info(resInfo):
     r = types.Response()
-    r.info.data = data
-    r.info.version = version
-    r.info.last_block_height = last_block_height
-    r.info.last_block_app_hash = last_block_app_hash
+    r.info.CopyFrom(resInfo)
     return r
 
 def to_response_flush():

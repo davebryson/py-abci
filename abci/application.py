@@ -30,7 +30,9 @@ class Result(object):
 class BaseApplication(object):
 
     def info(self):
-        return to_response_info(data="default")
+        r = types.ResponseInfo()
+        r.data = "default"
+        return r
 
     def set_option(self, k, v):
         print("set K")

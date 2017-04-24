@@ -35,7 +35,8 @@ class ProtocolHandler(object):
         return write_message(to_response_flush())
 
     def info(self, req):
-        response = self.app.info()
+        result = self.app.info()
+        response = to_response_info(result)
         return write_message(response)
 
     def set_option(self, req):
@@ -97,12 +98,12 @@ class ABCIServer(object):
         self.server.stop()
 
     def __handle_connection(self, socket, address):
-        ok_message('New connection from: {}:{}'.format(address[0], address[1]))
+        ok_message('... connection from: {}:{} ...'.format(address[0], address[1]))
         while True:
             inbound = socket.recv(1024)
+            #print(inbound)
             msg_length = len(inbound)
             data = BytesIO(inbound)
-
             if not data or msg_length == 0: return
 
             while data.tell() < msg_length:
@@ -111,7 +112,8 @@ class ABCIServer(object):
                     if err == 0: return
 
                     req_type = req.WhichOneof("value")
-                    print(req_type)
+                    #print(req_type)
+
                     response = self.protocol.process(req_type, req)
                     socket.sendall(response)
                 except Exception as e:
