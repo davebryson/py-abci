@@ -1,24 +1,23 @@
 from .messages import *
 import abci.types_pb2 as types
 
+def str_to_bytes(data):
+    if isinstance(data, str):
+        return data.encode('utf-8')
+    return data
 
 class Result(object):
     def __init__(self, code=types.OK, data=b'', log=''):
         self.code = code
-        self.data = self.__as_bytes(data)
+        self.data = str_to_bytes(data)
         self.log = log
 
-    def __as_bytes(self, d):
-        if isinstance(d, str):
-            return d.encode('utf-8')
-        return d
-
     def ok(data=b'', log=''):
-        data = self.__as_bytes(data)
+        data = str_to_bytes(data)
         return Result(types.OK, data, log)
 
     def error(code='', data=b'',log=''):
-        data = self.__as_bytes(data)
+        data = str_to_bytes(data)
         return Result(code, data, log)
 
     def is_ok(self):
@@ -31,22 +30,27 @@ class Result(object):
 class BaseApplication(object):
 
     def info(self):
-        return to_response_info()
+        return to_response_info(data="default")
 
     def set_option(self, k, v):
-        return ''
+        print("set K")
+        return 'key: {} value: {}'.format(k,v)
 
     def deliver_tx(self, tx):
-        return Result.ok()
+        return Result.ok(data='delivertx')
 
     def check_tx(self, tx):
-        return Result.ok()
+        return Result.ok(data='checktx')
 
     def query(self, reqQuery):
-        return to_response_query()
+        rq = types.ResponseQuery()
+        rq.code = types.OK
+        rq.key = reqQuery.data
+        rq.value = b'example result'
+        return rq
 
     def commit(self):
-        return Result.ok()
+        return Result.ok(data='commit #')
 
     def begin_block(self, hash, header):
         return

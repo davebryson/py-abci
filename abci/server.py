@@ -24,7 +24,7 @@ class ProtocolHandler(object):
         self.app = app
 
     def process(self,req_type, req):
-        handler = getattr(self,req_type, self.no_match)
+        handler = getattr(self, req_type, self.no_match)
         return handler(req)
 
     def echo(self, req):
@@ -39,8 +39,9 @@ class ProtocolHandler(object):
         return write_message(response)
 
     def set_option(self, req):
-        # TODO
-        return b''
+        result = self.app.set_option(req.set_option.key,req.set_option.value)
+        response = to_response_set_option(result)
+        return write_message(response)
 
     def check_tx(self, req):
         result = self.app.check_tx(req.check_tx.tx)
@@ -58,8 +59,9 @@ class ProtocolHandler(object):
         return write_message(response)
 
     def commit(self, req):
-        #TODO
-        return b''
+        result = self.app.commit()
+        response = to_response_commit(result.code, result.data, result.log)
+        return write_message(response)
 
     def begin_block(self, req):
         # TODO
@@ -84,6 +86,7 @@ class ABCIServer(object):
             raise Exception(crayons.red("Application missing or not an instance of Base Application"))
         self.port = port
         self.protocol = ProtocolHandler(app)
+
         self.server = StreamServer(('0.0.0.0', port), handle=self.__handle_connection)
 
     def start(self):
@@ -99,7 +102,7 @@ class ABCIServer(object):
             inbound = socket.recv(1024)
             msg_length = len(inbound)
             data = BytesIO(inbound)
-            #info_message('len {}'.format(msg_length))
+
             if not data or msg_length == 0: return
 
             while data.tell() < msg_length:
@@ -108,9 +111,9 @@ class ABCIServer(object):
                     if err == 0: return
 
                     req_type = req.WhichOneof("value")
+                    print(req_type)
                     response = self.protocol.process(req_type, req)
                     socket.sendall(response)
-
                 except Exception as e:
                     print(crayons.red(e))
 

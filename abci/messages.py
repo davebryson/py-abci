@@ -89,3 +89,15 @@ def to_response_query(resQuery):
     r = types.Response()
     r.query.CopyFrom(resQuery)
     return r
+
+def to_response_commit(code, data, log):
+    r = types.Response()
+    r.commit.code =code
+    r.commit.data = data
+    r.commit.log =log
+    return r
+
+def to_response_set_option(log):
+    r = types.Response()
+    r.set_option.log =log
+    return r

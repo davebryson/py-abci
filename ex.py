@@ -1,18 +1,17 @@
 import gevent
 import signal
-from abci.server import ABCIServer
 from gevent.event import Event
 
-from abci.messages import *
-from abci.application import BaseApplication
+from abci.server import ABCIServer
+from abci.application import BaseApplication, Result
+
 
 class TestApp(BaseApplication):
-    import  abci.types_pb2 as t
-    def info(self):
-        return to_response_info(data="hellothere")
-
     def deliver_tx(self, tx):
-        return Result(t.CodeType.OK, data='tx', log='all good')
+        return Result.ok(data=tx, log='all good')
+
+    def check_tx(self, tx):
+        return Result.ok(data=tx, log='all good on check')
 
 
 if __name__ == '__main__':
