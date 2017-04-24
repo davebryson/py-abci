@@ -3,13 +3,14 @@
 
 Build blockchain applications in Python for Tendermint.
 
-
+**Note: this is still very alpha code**
 
 ### Install
 Requires Python 3.6
-
 Recommend [PipEnv](http://docs.pipenv.org/en/latest/) for a virtualenv but not required
 ```
+git clone https://github.com/davebryson/py-abci
+cd py-abci
 pipenv --three # for a python 3 virtualenv
 pipenv install
 
@@ -18,7 +19,6 @@ pipenv install
 ### Create an Application
 
 counter.py
-
 ```python
 
 import gevent
