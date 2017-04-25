@@ -38,6 +38,9 @@ class SimpleCounter(BaseApplication):
         h = struct.pack('>Q', self.txCount)
         return Result.ok(data=str(h))
 
+    def begin_block(self, hash, header):
+        return types.RequestBeginBlock()
+
 
 if __name__ == '__main__':
     app = ABCIServer(app=SimpleCounter())

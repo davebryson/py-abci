@@ -98,3 +98,13 @@ def to_response_set_option(log):
     r = types.Response()
     r.set_option.log =log
     return r
+
+def to_response_begin_block():
+    r = types.Response()
+    r.begin_block.CopyFrom(types.ResponseBeginBlock())
+    return r
+
+def to_response_end_block(res):
+    r = types.Response()
+    r.end_block.CopyFrom(res)
+    return r

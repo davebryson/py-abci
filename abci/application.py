@@ -28,14 +28,12 @@ class Result(object):
 
 
 class BaseApplication(object):
-
     def info(self):
         r = types.ResponseInfo()
         r.data = "default"
         return r
 
     def set_option(self, k, v):
-        print("set K")
         return 'key: {} value: {}'.format(k,v)
 
     def deliver_tx(self, tx):
@@ -54,13 +52,14 @@ class BaseApplication(object):
     def commit(self):
         return Result.ok(data='commit #')
 
+    def init_chain(self, validators):
+        return
+
     def begin_block(self, hash, header):
         return
 
     def end_block(self, height):
         # return ToResponseEndBlock
-        return
-
-    def init_chain(self, validators):
-        # return ToResponseInitChain
-        return
+        res = types.ResponseEndBlock()
+        #res.diffs = []
+        return res

@@ -65,11 +65,13 @@ class ProtocolHandler(object):
         return write_message(response)
 
     def begin_block(self, req):
-        # TODO
-        return b''
+        self.app.begin_block(req.begin_block.hash, req.begin_block.header)
+        return write_message(to_response_begin_block())
+
     def end_block(self, req):
-        # TODO
-        return b''
+        result = self.app.end_block(req.end_block.height)
+        return write_message(to_response_end_block(result))
+
     def init_chain(self, validators):
         # TODO
         return b''
