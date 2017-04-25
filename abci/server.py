@@ -5,6 +5,7 @@ from .application import BaseApplication
 
 from gevent.server import StreamServer
 
+## Some colored logging messages...
 def info_message(txt):
     print(" >> {}".format(txt))
 
@@ -103,7 +104,6 @@ class ABCIServer(object):
         ok_message('... connection from: {}:{} ...'.format(address[0], address[1]))
         while True:
             inbound = socket.recv(1024)
-            #print(inbound)
             msg_length = len(inbound)
             data = BytesIO(inbound)
             if not data or msg_length == 0: return
@@ -114,7 +114,6 @@ class ABCIServer(object):
                     if err == 0: return
 
                     req_type = req.WhichOneof("value")
-                    #print(req_type)
 
                     response = self.protocol.process(req_type, req)
                     socket.sendall(response)

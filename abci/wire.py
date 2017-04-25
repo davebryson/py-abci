@@ -19,7 +19,6 @@ def uvarint_size(i):
             return j
     return 8
 
-
 def write_varint(i, writer):
     negate = False
     if i < 0:

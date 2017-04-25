@@ -5,10 +5,11 @@ import abci.types_pb2 as types
 from abci.server import ProtocolHandler
 from abci.application import BaseApplication, Result
 
-
 class SApp(BaseApplication):
     def info(self):
-        return to_response_info(data="hellothere")
+        r = types.ResponseInfo()
+        r.data = "hellothere"
+        return r
 
     def deliver_tx(self, tx):
         return Result(types.OK, data=tx, log='all good')

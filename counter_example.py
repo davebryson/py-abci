@@ -7,6 +7,12 @@ import abci.types_pb2 as types
 from abci.server import ABCIServer
 from abci.application import BaseApplication, Result
 
+"""
+Try it out:
+1. Start this app (python counter_example.py)
+2. Start a Tendermint node (tendermint node)
+3. Send Txs (curl -s http://localhost...)
+"""
 class SimpleCounter(BaseApplication):
     def __init__(self):
         self.hashCount = 0
@@ -24,7 +30,7 @@ class SimpleCounter(BaseApplication):
 
     def deliver_tx(self, tx):
         self.txCount += 1
-        return Result.ok(log='added tx')
+        return Result.ok(log=tx)
 
     def check_tx(self, tx):
         if tx == b'':

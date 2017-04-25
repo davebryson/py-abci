@@ -26,8 +26,10 @@ class Result(object):
     def str(self):
         return "ABCI[code:{}, data:{}, log:{}]".format(self.code, self.data, self.log)
 
-
 class BaseApplication(object):
+    """
+    Base App extends this and override what's needed for your app
+    """
     def info(self):
         r = types.ResponseInfo()
         r.data = "default"
@@ -43,10 +45,7 @@ class BaseApplication(object):
         return Result.ok(data='checktx')
 
     def query(self, reqQuery):
-        rq = types.ResponseQuery()
-        rq.code = types.OK
-        rq.key = reqQuery.data
-        rq.value = b'example result'
+        rq = types.ResponseQuery(code=types.OK, key=reqQuery.data, value=b'example result')
         return rq
 
     def commit(self):
@@ -59,7 +58,4 @@ class BaseApplication(object):
         return
 
     def end_block(self, height):
-        # return ToResponseEndBlock
-        res = types.ResponseEndBlock()
-        #res.diffs = []
-        return res
+        return types.ResponseEndBlock()
