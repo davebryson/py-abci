@@ -3,8 +3,6 @@
 
 Build blockchain applications in Python for Tendermint.
 
-**Note: this is still very alpha code**
-
 ### Install
 Requires Python 3.6
 
@@ -81,7 +79,7 @@ if __name__ == '__main__':
 ```
 In one terminal
 >> pipenv shell
->> python counter.py
+>> python counter_example.py
  ABCIServer started on port: 46658
 
 In another terminal
@@ -100,3 +98,19 @@ In another terminal
 -> data: b'\x00\x00\x00\x00\x00\x00\x00\x01'
 -> data.hex: 62275C7830305C7830305C7830305C7830305C7830305C7830305C7830305C78303127
 ```
+
+### Use it with Tendermint
+```
+In one terminal
+>> pipenv shell
+>> python counter_example.py
+ ABCIServer started on port: 46658
+
+ In another terminal
+ >> tendermint node
+
+ In another terminal
+ >> curl -s 'localhost:46657/broadcast_tx_commit?tx="1"'
+ >> curl -s 'localhost:46657/broadcast_tx_commit?tx="2"'
+ ...
+ ```
