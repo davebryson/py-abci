@@ -3,6 +3,8 @@
 
 Build blockchain applications in Python for Tendermint.
 
+Passes the ABCI compatibility [test](https://github.com/tendermint/abci/blob/master/tests/test_app/main.go)
+
 ### Install
 Requires Python 3.6
 
@@ -15,6 +17,7 @@ pipenv install
 ```
 
 ### Create an Application
+Simple example:
 
 counter.py
 ```python
@@ -97,6 +100,12 @@ In another terminal
 >> commit
 -> data: b'\x00\x00\x00\x00\x00\x00\x00\x01'
 -> data.hex: 62275C7830305C7830305C7830305C7830305C7830305C7830305C7830305C78303127
+```
+
+## Run ABCI compatibility test
+ NOTE: Requires golang and ABCI source
+```
+make test
 ```
 
 ### Use it with Tendermint

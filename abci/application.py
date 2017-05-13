@@ -1,23 +1,19 @@
 from .messages import *
+import abci.utils as util
 import abci.types_pb2 as types
-
-def str_to_bytes(data):
-    if isinstance(data, str):
-        return data.encode('utf-8')
-    return data
 
 class Result(object):
     def __init__(self, code=types.OK, data=b'', log=''):
         self.code = code
-        self.data = str_to_bytes(data)
+        self.data = util.str_to_bytes(data)
         self.log = log
 
     def ok(data=b'', log=''):
-        data = str_to_bytes(data)
+        data = util.str_to_bytes(data)
         return Result(types.OK, data, log)
 
     def error(code='', data=b'',log=''):
-        data = str_to_bytes(data)
+        data = util.str_to_bytes(data)
         return Result(code, data, log)
 
     def is_ok(self):

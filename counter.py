@@ -3,11 +3,13 @@ import signal
 from gevent.event import Event
 
 import struct
+import abci.utils as util
 import abci.types_pb2 as types
 from abci.server import ABCIServer
 from abci.application import BaseApplication, Result
 
 """
+Counter example
 Try it out:
 1. Start this app (python counter_example.py)
 2. Start a Tendermint node (tendermint node)
@@ -26,15 +28,29 @@ class SimpleCounter(BaseApplication):
         return r
 
     def set_option(self, key, value):
-        return 'key: {} value: {}'.format(k,v)
+        if key == "serial" and value == "on":
+            self.serial = True
+        return ""
 
     def deliver_tx(self, tx):
+        if self.serial:
+            txByteArray = bytearray(tx)
+            if len(tx) >= 2 and tx[:2] == "0x":
+                txByteArray = util.decode_hex(txBytes[2:])
+            txValue = util.big_endian_to_int(txByteArray)
+            if txValue != self.txCount:
+                return Result.error(code=types.BadNonce, log='bad nonce')
         self.txCount += 1
         return Result.ok(log=tx)
 
     def check_tx(self, tx):
-        if tx == b'':
-            return Result.error(code=types.EncodingError, log='bad input empty tx')
+        if self.serial:
+            txByteArray = bytearray(txBytes)
+            if len(txBytes) >= 2 and txBytes[:2] == "0x":
+                txByteArray = util.decode_hex(txBytes[2:])
+            txValue = util.big_endian_to_int(txByteArray)
+            if txValue < self.txCount:
+                return Result.error(code=types.EncodingError, log='bad input empty tx')
         return Result.ok(log='thumbs up')
 
     def commit(self):
@@ -42,15 +58,10 @@ class SimpleCounter(BaseApplication):
         if self.txCount == 0:
             return Result.ok(data='')
         h = struct.pack('>Q', self.txCount)
-        return Result.ok(data=str(h))
-
-    def begin_block(self, hash, header):
-        return types.RequestBeginBlock()
-
+        return Result.ok(data=h)
 
 if __name__ == '__main__':
     app = ABCIServer(app=SimpleCounter())
-    # Fire it up...
     app.start()
 
     # wait for interrupt
