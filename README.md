@@ -112,14 +112,14 @@ make test
 ```
 In one terminal
 >> pipenv shell
->> python counter_example.py
+>> python counter.py
  ABCIServer started on port: 46658
 
  In another terminal
  >> tendermint node
 
  In another terminal
- >> curl -s 'localhost:46657/broadcast_tx_commit?tx="1"'
- >> curl -s 'localhost:46657/broadcast_tx_commit?tx="2"'
+ >> curl -s 'localhost:46657/broadcast_tx_commit?tx="0x00"'
+ >> curl -s 'localhost:46657/broadcast_tx_commit?tx="0x01"'
  ...
  ```
