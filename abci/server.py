@@ -74,9 +74,8 @@ class ProtocolHandler(object):
         return write_message(to_response_end_block(result))
 
     def init_chain(self, validators):
-        # TODO
-        return b''
-
+        self.app.init_chain(validators)
+        return write_message(to_response_init_chain())
 
     def no_match(self, req):
         response = to_response_exception("Unknown request!")

@@ -108,3 +108,7 @@ def to_response_end_block(res):
     r = types.Response()
     r.end_block.CopyFrom(res)
     return r
+
+def to_response_init_chain():
+    r = types.Response()
+    r.init_chain.CopyFrom(types.ResponseInitChain())
