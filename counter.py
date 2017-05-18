@@ -41,7 +41,7 @@ class SimpleCounter(BaseApplication):
             if txValue != self.txCount:
                 return Result.error(code=types.BadNonce, log='bad nonce')
         self.txCount += 1
-        return Result.ok(data=tx)
+        return Result.ok()
 
     def check_tx(self, tx):
         if self.serial:
