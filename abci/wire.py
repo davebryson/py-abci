@@ -31,11 +31,9 @@ def write_varint(i, writer):
     if size == 0:
         return writer.write(0)
     big_end = util.int_to_big_endian(i)
-    #big_end = struct.pack(__structcodes(8), i)
     if negate:
         size += 0xF0
     writer.write(bytes([size]))
-    #writer.write(big_end[(8-size):])
     writer.write(big_end)
 
 def read_varint(reader):
@@ -43,7 +41,6 @@ def read_varint(reader):
     if len(b) == 0:
         return 0
     size = util.big_endian_to_int(b)
-    #size = struct.unpack(__structcodes(1), b)[0]
     negate = False
     if size >> 4 == 0xF:
         negate = True
@@ -54,7 +51,6 @@ def read_varint(reader):
     if len(rest) < size:
         return 0
     i = util.big_endian_to_int(rest)
-    #i = struct.unpack(__structcodes(size), rest)[0]
     if negate:
         return -i
     else:

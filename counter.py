@@ -36,21 +36,22 @@ class SimpleCounter(BaseApplication):
         if self.serial:
             txByteArray = bytearray(tx)
             if len(tx) >= 2 and tx[:2] == "0x":
-                txByteArray = util.decode_hex(txBytes[2:])
+                txByteArray = util.decode_hex(tx[2:])
             txValue = util.big_endian_to_int(txByteArray)
             if txValue != self.txCount:
                 return Result.error(code=types.BadNonce, log='bad nonce')
         self.txCount += 1
-        return Result.ok(log=tx)
+        return Result.ok(data=tx)
 
     def check_tx(self, tx):
         if self.serial:
-            txByteArray = bytearray(txBytes)
-            if len(txBytes) >= 2 and txBytes[:2] == "0x":
-                txByteArray = util.decode_hex(txBytes[2:])
+            txByteArray = bytearray(tx)
+            if len(tx) >= 2 and tx[:2] == "0x":
+                txByteArray = util.decode_hex(tx[2:])
             txValue = util.big_endian_to_int(txByteArray)
-            if txValue < self.txCount:
-                return Result.error(code=types.EncodingError, log='bad input empty tx')
+            print(txValue)
+            if txValue != self.txCount:
+                return Result.error(code=types.BadNonce, log='bad nonce')
         return Result.ok(log='thumbs up')
 
     def commit(self):

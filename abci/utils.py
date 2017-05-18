@@ -1,4 +1,3 @@
-# Common functions needed
 import binascii
 from math import ceil
 
