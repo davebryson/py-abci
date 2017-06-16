@@ -48,10 +48,10 @@ class BaseApplication(object):
         return Result.ok(data='commit #')
 
     def init_chain(self, validators):
-        return
+        pass
 
     def begin_block(self, hash, header):
-        return
+        pass
 
     def end_block(self, height):
         return types.ResponseEndBlock()

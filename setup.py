@@ -31,6 +31,7 @@ setup(
         "gevent>=1.2.1",
         "crayons>=0.1.2",
         "pytest>=3.0.7",
-        "pytest-pythonpath>=0.7.1"
+        "pytest-pythonpath>=0.7.1",
+        "requests>=2.18.1"
     ],
 )

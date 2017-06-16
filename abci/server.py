@@ -110,6 +110,7 @@ class ABCIServer(object):
             while data.tell() < msg_length:
                 try:
                     req, err  = read_message(data, types.Request)
+                    # TODO: an err should be 1 ...
                     if err == 0: return
 
                     req_type = req.WhichOneof("value")
@@ -117,6 +118,6 @@ class ABCIServer(object):
                     response = self.protocol.process(req_type, req)
                     socket.sendall(response)
                 except Exception as e:
-                    print(crayons.red(e))
+                    err_message(crayons.red(e))
 
         socket.close()

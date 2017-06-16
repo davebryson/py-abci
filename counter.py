@@ -11,15 +11,15 @@ from abci.application import BaseApplication, Result
 """
 Counter example
 Try it out:
-1. Start this app (python counter_example.py)
+1. Start this app (python counter.py)
 2. Start a Tendermint node (tendermint node)
 3. Send Txs (curl -s http://localhost...)
 """
 class SimpleCounter(BaseApplication):
-    def __init__(self):
+    def __init__(self, serial=False):
         self.hashCount = 0
         self.txCount = 0
-        self.serial = False
+        self.serial = serial
 
     def info(self):
         r = types.ResponseInfo()
@@ -33,26 +33,26 @@ class SimpleCounter(BaseApplication):
         return ""
 
     def deliver_tx(self, tx):
-        if self.serial:
-            txByteArray = bytearray(tx)
-            if len(tx) >= 2 and tx[:2] == "0x":
-                txByteArray = util.decode_hex(tx[2:])
-            txValue = util.big_endian_to_int(txByteArray)
-            if txValue != self.txCount:
-                return Result.error(code=types.BadNonce, log='bad nonce')
+        """ Mutate state """
         self.txCount += 1
         return Result.ok()
 
     def check_tx(self, tx):
+        """ Validate the Tx before entry into the mempool """
         if self.serial:
             txByteArray = bytearray(tx)
             if len(tx) >= 2 and tx[:2] == "0x":
                 txByteArray = util.decode_hex(tx[2:])
             txValue = util.big_endian_to_int(txByteArray)
-            print(txValue)
-            if txValue != self.txCount:
+            if txValue <= self.txCount:
                 return Result.error(code=types.BadNonce, log='bad nonce')
         return Result.ok(log='thumbs up')
+
+    def query(self, reqQuery):
+        """ Simply returns the latest Tx count """
+        result = util.int_to_big_endian(self.txCount)
+        rq = types.ResponseQuery(code=types.OK, key=b'count', value=result)
+        return rq
 
     def commit(self):
         self.hashCount += 1
@@ -62,7 +62,7 @@ class SimpleCounter(BaseApplication):
         return Result.ok(data=h)
 
 if __name__ == '__main__':
-    app = ABCIServer(app=SimpleCounter())
+    app = ABCIServer(app=SimpleCounter(serial=True))
     app.start()
 
     # wait for interrupt
