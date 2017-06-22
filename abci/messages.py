@@ -82,9 +82,16 @@ def to_response_check_tx(code, data, log):
     r.check_tx.log = log
     return r
 
-def to_response_query(resQuery):
+def to_response_query(res):
     r = types.Response()
-    r.query.CopyFrom(resQuery)
+    # This results in an odd protobuf 'MergeFrom' error
+    # r.query.CopyFrom(res)
+    # Manually copy...
+    r.query.code = res.code
+    r.query.key = req.key
+    r.query.value = res.value
+    r.query.height = res.height
+    r.query.log = res.log
     return r
 
 def to_response_commit(code, data, log):
