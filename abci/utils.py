@@ -1,4 +1,4 @@
-import binascii
+import binascii, logging, colorlog
 from math import ceil
 
 def str_to_bytes(data):
@@ -31,3 +31,30 @@ def encode_hex(b):
     if isinstance(b, (bytes, bytearray)):
         return str(binascii.hexlify(b), 'utf-8')
     raise TypeError('Value must be an instance of str or bytes')
+
+def get_logger():
+    logger = logging.getLogger('abci.app')
+
+    if logger.hasHandlers():
+        return logger
+
+    formatter = colorlog.ColoredFormatter(
+        "%(log_color)s%(levelname)-8s%(reset)s %(white)s%(message)s",
+        datefmt=None,
+        reset=True,
+        log_colors={
+            'DEBUG':    'cyan',
+		    'INFO':     'green',
+		    'WARNING':  'yellow',
+		    'ERROR':    'red',
+		    'CRITICAL': 'red,bg_white',
+        },
+        secondary_log_colors={},
+        style='%')
+
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+
+    return logger

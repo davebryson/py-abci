@@ -2,3 +2,6 @@
 *.pyc
 .cache/
 __pycache__/
+dist
+pyabci.egg-info/
+.test_pyabci

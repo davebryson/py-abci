@@ -41,7 +41,6 @@ def test_handler():
     assert 'info' == res.WhichOneof("value")
     assert res.info.data == 'hellothere'
 
-
     r = to_request_deliver_tx(b'0x1234')
     data = p.process('deliver_tx', r)
     res, err  = read_message(BytesIO(data), types.Response)

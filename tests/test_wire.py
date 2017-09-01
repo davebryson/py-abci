@@ -1,6 +1,7 @@
 from abci.wire import *
 from abci.messages import *
 from abci.server import ProtocolHandler
+import abci.types_pb2 as types
 
 def test_varints():
     buffer = BytesIO()

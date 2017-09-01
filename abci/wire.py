@@ -1,18 +1,9 @@
-#import struct
+"""
+Minimal implementation of the Tendermint go-wire protocol. Just enough
+to support what's need for ABCI communication with protobuf
+"""
 from io import BytesIO
-import abci.utils as util
-
-"""
-def __structcodes(length):
-    if length == 1:
-        return '>B'
-    if length == 2:
-        return '>H'
-    if length == 4:
-        return '>I'
-    if length == 8:
-        return '>Q'
-"""
+from .utils import int_to_big_endian, big_endian_to_int
 
 def uvarint_size(i):
     if i == 0:
@@ -30,7 +21,7 @@ def write_varint(i, writer):
     size = uvarint_size(i)
     if size == 0:
         return writer.write(0)
-    big_end = util.int_to_big_endian(i)
+    big_end = int_to_big_endian(i)
     if negate:
         size += 0xF0
     writer.write(bytes([size]))
@@ -40,7 +31,7 @@ def read_varint(reader):
     b = reader.read(1)
     if len(b) == 0:
         return 0
-    size = util.big_endian_to_int(b)
+    size = big_endian_to_int(b)
     negate = False
     if size >> 4 == 0xF:
         negate = True
@@ -50,7 +41,7 @@ def read_varint(reader):
     rest = reader.read(size)
     if len(rest) < size:
         return 0
-    i = util.big_endian_to_int(rest)
+    i = big_endian_to_int(rest)
     if negate:
         return -i
     else:

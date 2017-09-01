@@ -5,12 +5,11 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 pytest-pythonpath = "*"
-requests = "*"
 
 [packages]
 protobuf = "*"
 gevent = "*"
-crayons = "*"
+colorlog = "*"
 
 [requires]
 python_version = "3.6"

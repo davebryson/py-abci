@@ -12,16 +12,16 @@ with open(path.join(DIR, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='pyabci',
-    version='0.1.0',
+    version='0.2.0',
     description='Python based ABCI Server for Tendermint',
     long_description=long_description,
     url='https://github.com/davebryson/py-abci',
     author='Dave Bryson',
-    license='MIT',
+    license='Apache',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: Apache Software License'
         'Programming Language :: Python :: 3.6',
     ],
     keywords='tendermint abci',
@@ -29,9 +29,8 @@ setup(
     install_requires=[
         "protobuf>=3.2.0",
         "gevent>=1.2.1",
-        "crayons>=0.1.2",
+        "colorlog>=3.0.1",
         "pytest>=3.0.7",
         "pytest-pythonpath>=0.7.1",
-        "requests>=2.18.1"
     ],
 )

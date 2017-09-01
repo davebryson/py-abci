@@ -1,27 +1,3 @@
-
-# Python Tendermint Interface (ABCI)
-
-Build blockchain applications in Python for Tendermint.
-
-### Install
-Requires Python 3.6
-
-Recommend [PipEnv](http://docs.pipenv.org/en/latest/) for a virtualenv *but not required*
-
-```
-git clone https://github.com/davebryson/py-abci
-cd py-abci
-pipenv --three # for a python 3 virtualenv
-pipenv install
-```
-
-Or run `python setup.py` locally  (proper PIP todo...)
-
-### Create an Application
-Example of a simple global counting app.
-
-examples/counter.py
-```python
 import struct
 import abci.utils as util
 
@@ -105,4 +81,3 @@ class SimpleCounter(BaseApplication):
 if __name__ == '__main__':
     app = ABCIServer(app=SimpleCounter())
     app.run()
-```

@@ -1,26 +1,30 @@
-import crayons
-from .wire import *
-from .messages import *
-from .application import BaseApplication
+"""
+ABCI TCP server
+Tendermint connects to this server over 3 different connections:
+ - mempool: used for check_tx
+ - consensus: used for the begin_block -> deliver_tx -> end_block -> commit flow
+ - query: used to query application state
 
+This can be a bit confusing in the app since gevent spawns a greenlet for each
+connection.  If one crashes you will not have full connectivity to Tendermint
+"""
+import sys
+
+import gevent, signal
+from gevent.event import Event
 from gevent.server import StreamServer
 
-## Some colored logging messages...
-def info_message(txt):
-    print(" >> {}".format(txt))
+from .wire import *
+from .messages import *
+from .types_pb2 import Request
+from .utils import get_logger
+from .application import BaseApplication
 
-def ok_message(txt):
-    print(" >> {}".format(crayons.green(txt)))
-
-def err_message(txt):
-    print(" >> {}".format(crayons.red(txt)))
-
-def warn_message(txt):
-    print(" >> {}".format(crayons.yellow(txt)))
-
+log = get_logger()
 
 class ProtocolHandler(object):
-
+    """ Internal handler called by the server to process requests from
+    Tendermint.  The handler delegates call to your application"""
     def __init__(self, app):
         self.app = app
 
@@ -74,6 +78,7 @@ class ProtocolHandler(object):
         return write_message(to_response_end_block(result))
 
     def init_chain(self, validators):
+        log.debug("running init_chain")
         self.app.init_chain(validators)
         return write_message(to_response_init_chain())
 
@@ -81,43 +86,62 @@ class ProtocolHandler(object):
         response = to_response_exception("Unknown request!")
         return write_message(response)
 
-
 class ABCIServer(object):
-
     def __init__(self, port=46658, app=None):
         if not app or not isinstance(app, BaseApplication):
-            raise Exception(crayons.red("Application missing or not an instance of Base Application"))
+            log.error("Application missing or not an instance of Base Application")
+            raise TypeError("Application missing or not an instance of Base Application")
+
         self.port = port
         self.protocol = ProtocolHandler(app)
-
         self.server = StreamServer(('0.0.0.0', port), handle=self.__handle_connection)
 
     def start(self):
         self.server.start()
-        ok_message("ABCIServer started on port: {}".format(self.port))
+        log.info(" ABCIServer started on port: {}".format(self.port))
 
     def stop(self):
+        log.info("Shutting down server")
         self.server.stop()
 
+    def run(self):
+        """Option to calling manually calling start()/stop(). This will start
+        the server and watch for signals to stop the server"""
+        self.server.start()
+        log.info(" ABCIServer started on port: {}".format(self.port))
+        # wait for interrupt
+        evt = Event()
+        gevent.signal(signal.SIGQUIT, evt.set)
+        gevent.signal(signal.SIGTERM, evt.set)
+        gevent.signal(signal.SIGINT, evt.set)
+        evt.wait()
+        log.info("Shutting down server")
+        self.server.stop()
+
+    # TM will spawn off 3 connections: mempool, consensus, query
+    # If an error happens in 1 it still leaves the others open which
+    # means you don't have all the connections available to TM
     def __handle_connection(self, socket, address):
-        ok_message('... connection from: {}:{} ...'.format(address[0], address[1]))
+        log.debug(' ... connection from tendermint: {}:{} ...'.format(address[0], address[1]))
+
         while True:
             inbound = socket.recv(1024)
             msg_length = len(inbound)
             data = BytesIO(inbound)
             if not data or msg_length == 0: return
 
-            while data.tell() < msg_length:
-                try:
-                    req, err  = read_message(data, types.Request)
+            try:
+                while data.tell() < msg_length:
+                    req, err  = read_message(data, Request)
                     # TODO: an err should be 1 ...
+                    # this is actually confusing see read_message
                     if err == 0: return
 
                     req_type = req.WhichOneof("value")
 
                     response = self.protocol.process(req_type, req)
                     socket.sendall(response)
-                except Exception as e:
-                    err_message(crayons.red(e))
+            except:
+                log.error(" Server Error: {}".format(sys.exc_info()[1]))
 
         socket.close()
