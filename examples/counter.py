@@ -4,7 +4,6 @@ import abci.utils as util
 from abci import (
     ABCIServer,
     BaseApplication,
-    BaseApplication,
     ResponseInfo,
     ResponseQuery,
     Result

@@ -11,20 +11,20 @@ with open(path.join(DIR, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='pyabci',
+    name='py-abci',
     version='0.2.0',
     description='Python based ABCI Server for Tendermint',
     long_description=long_description,
     url='https://github.com/davebryson/py-abci',
     author='Dave Bryson',
-    license='Apache',
+    license='Apache2',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License'
         'Programming Language :: Python :: 3.6',
     ],
-    keywords='tendermint abci',
+    keywords='blockchain tendermint abci',
     packages=find_packages(exclude=['tests']),
     install_requires=[
         "protobuf>=3.2.0",

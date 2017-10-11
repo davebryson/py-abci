@@ -4,4 +4,6 @@
 __pycache__/
 dist
 pyabci.egg-info/
+py_abci.egg-info/
 .test_pyabci
+build
