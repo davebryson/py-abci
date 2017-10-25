@@ -4,9 +4,11 @@ Installation
 ------------
 Requires Python 3.6
 
+``pip install abci``  OR
+
 ``python setup.py install``
 
-Or if you're using PipEnv (http://docs.pipenv.org/en/latest/)
+OR using PipEnv (http://docs.pipenv.org/en/latest/)
 
 ``git clone https://github.com/davebryson/py-abci``
 
@@ -24,3 +26,4 @@ Getting Started
 3. Run it
 
 See the example app ``counter.py`` application under the ``examples`` directory
+here: https://github.com/davebryson/py-abci/blob/master/examples/counter.py
