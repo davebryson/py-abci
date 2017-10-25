@@ -1,6 +1,4 @@
 
-# Python Tendermint Interface (ABCI)
-
 Build blockchain applications in Python for Tendermint.
 
 ### Install
