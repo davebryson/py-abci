@@ -1,6 +1,6 @@
 """
 Minimal implementation of the Tendermint go-wire protocol. Just enough
-to support what's need for ABCI communication with protobuf
+to support what's needed for ABCI communication with protobuf
 """
 from io import BytesIO
 from .utils import int_to_big_endian, big_endian_to_int

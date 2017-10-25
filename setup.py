@@ -11,7 +11,7 @@ with open(path.join(DIR, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='py-abci',
+    name='abci',
     version='0.2.0',
     description='Python based ABCI Server for Tendermint',
     long_description=long_description,
