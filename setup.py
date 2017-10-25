@@ -17,7 +17,7 @@ setup(
     long_description=long_description,
     url='https://github.com/davebryson/py-abci',
     author='Dave Bryson',
-    license='Apache2',
+    license='Apache 2.0',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
