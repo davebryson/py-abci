@@ -7,7 +7,7 @@ from os import path
 
 DIR = path.abspath(path.dirname(__file__))
 
-with open(path.join(DIR, 'README.md'), encoding='utf-8') as f:
+with open(path.join(DIR, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
@@ -33,4 +33,5 @@ setup(
         "pytest>=3.0.7",
         "pytest-pythonpath>=0.7.1",
     ],
+    python_requires='>=3',
 )

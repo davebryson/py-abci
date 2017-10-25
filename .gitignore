@@ -3,7 +3,8 @@
 .cache/
 __pycache__/
 dist
-pyabci.egg-info/
-py_abci.egg-info/
+abci.egg-info/
 .test_pyabci
+py_abci.egg-info
+pyabci.egg-info
 build
