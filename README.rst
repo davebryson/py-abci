@@ -4,7 +4,9 @@ Installation
 ------------
 Requires Python 3.6
 
-Using PipEnv: http://docs.pipenv.org/en/latest/
+``python setup.py install``
+
+Or if you're using PipEnv (http://docs.pipenv.org/en/latest/)
 
 ``git clone https://github.com/davebryson/py-abci``
 
@@ -14,7 +16,6 @@ Using PipEnv: http://docs.pipenv.org/en/latest/
 
 ``pipenv install``
 
-Or run ``python setup.py``
 
 Getting Started
 ---------------
