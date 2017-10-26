@@ -32,6 +32,7 @@ setup(
         "colorlog>=3.0.1",
         "pytest>=3.0.7",
         "pytest-pythonpath>=0.7.1",
+        "pytest-cov>=2.5.1",
     ],
     python_requires='>=3',
 )

@@ -2,6 +2,9 @@ language: python
 python: 3.6
 
 install:
+  - pip install --upgrade pip codecov
   - pip install .
 
-script: pytest -v tests/
+script: pytest -v --cov=abci/ tests/
+
+after_success: codecov
