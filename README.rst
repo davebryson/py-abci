@@ -1,3 +1,6 @@
+..image::https://travis-ci.org/davebryson/py-abci.svg?branch=master
+  :target:https://https://travis-ci.org/davebryson/py-abci
+
 Build blockchain applications in Python for Tendermint
 
 Installation
