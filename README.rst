@@ -4,6 +4,9 @@
 .. image:: https://codecov.io/gh/davebryson/py-abci/branch/master/graph/badge.svg
   :target: https://codecov.io/gh/davebryson/py-abci
 
+.. image:: https://img.shields.io/pypi/v/abci.svg
+  :target: https://pypi.python.org/pypi/abci
+
 Build blockchain applications in Python for Tendermint
 
 Installation
