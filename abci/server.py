@@ -124,10 +124,17 @@ class ABCIServer(object):
     def __handle_connection(self, socket, address):
         log.debug(' ... connection from tendermint: {}:{} ...'.format(address[0], address[1]))
 
+        data = BytesIO()
+        carry_forward = b''
+
         while True:
             inbound = socket.recv(1024)
-            msg_length = len(inbound)
-            data = BytesIO(inbound)
+            msg_length = len(carry_forward) + len(inbound)
+            data.write(carry_forward)
+            data.write(inbound)
+
+            data.seek(0)
+            carry_forward = b''
             if not data or msg_length == 0: return
 
             try:
@@ -136,6 +143,10 @@ class ABCIServer(object):
                     # TODO: an err should be 1 ...
                     # this is actually confusing see read_message
                     if err == 0: return
+                    if err == -1:
+                        data.seek(req)
+                        carry_forward = data.read(1024)
+                        break
 
                     req_type = req.WhichOneof("value")
 
@@ -144,4 +155,6 @@ class ABCIServer(object):
             except:
                 log.error(" Server Error: {}".format(sys.exc_info()[1]))
 
+            data.seek(0)
+            data.truncate()
         socket.close()
