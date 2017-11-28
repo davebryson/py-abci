@@ -53,7 +53,7 @@ def write_byte_slice(bz, buffer):
 
 def read_byte_slize(reader):
     length = read_varint(reader)
-    return reader.read(length)
+    return length, reader.read(length)
 
 def write_message(message):
     buffer = BytesIO(b'')
@@ -62,9 +62,14 @@ def write_message(message):
     return buffer.getvalue()
 
 def read_message(reader, message):
-    bsliced = read_byte_slize(reader)
+    current_position = reader.tell()
+    length, bsliced = read_byte_slize(reader)
     if len(bsliced) == 0:
         return None, 0
+
+    if len(bsliced) < length:
+        return current_position, -1
+
     m = message()
     m.ParseFromString(bsliced)
     return m, 1
