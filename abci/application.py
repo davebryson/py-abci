@@ -32,7 +32,7 @@ class BaseApplication(object):
     """
     Base ABCI Application. Extend this and override what's needed for your app
     """
-    def init_chain(self, validators):
+    def init_chain(self, reqInitChain):
         """Called only once when blockheight == 0"""
         pass
 
@@ -64,7 +64,7 @@ class BaseApplication(object):
         rq = ResponseQuery(code=OK, key=reqQuery.data, value=b'example result')
         return rq
 
-    def begin_block(self, hash, header):
+    def begin_block(self, reqBeginBlock):
         """Called to process a block"""
         pass
 

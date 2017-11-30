@@ -70,7 +70,8 @@ class ProtocolHandler(object):
         return write_message(response)
 
     def begin_block(self, req):
-        self.app.begin_block(req.begin_block.hash, req.begin_block.header)
+        #self.app.begin_block(req.begin_block.hash, req.begin_block.header)
+        self.app.begin_block(req.begin_block)
         return write_message(to_response_begin_block())
 
     def end_block(self, req):
