@@ -38,10 +38,10 @@ def test_flow():
     data = BytesIO(inbound)
 
     req_type,_  = read_message(data, types.Request)
-    assert 'info' == req_type.WhichOneof("value")
+    assert 'flush' == req_type.WhichOneof("value")
 
     req_type2, _  = read_message(data, types.Request)
-    assert 'flush' == req_type2.WhichOneof("value")
+    assert 'echo' == req_type2.WhichOneof("value")
 
     assert data.read() == b''
     data.close()

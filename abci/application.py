@@ -2,6 +2,9 @@ from .messages import *
 from .types_pb2 import *
 from .utils import str_to_bytes
 
+OK = 0
+InternalError = 1
+
 class Result(object):
     """Return object for certain abci calls"""
     def __init__(self, code=OK, data=b'', log=''):
