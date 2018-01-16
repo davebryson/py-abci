@@ -3,7 +3,7 @@ from abci.messages import *
 from io import BytesIO
 import abci.types_pb2 as types
 from abci.server import ProtocolHandler
-from abci.application import BaseApplication, Result
+from abci.application import BaseApplication, Result, OK
 
 class SApp(BaseApplication):
     def info(self):
@@ -12,10 +12,10 @@ class SApp(BaseApplication):
         return r
 
     def deliver_tx(self, tx):
-        return Result(types.OK, data=tx, log='all good')
+        return Result(OK, data=tx, log='all good')
 
     def check_tx(self, tx):
-        return Result(types.OK, data=tx, log='all good again')
+        return Result(OK, data=tx, log='all good again')
 
     def query(self, reqQuery):
         return types.ResponseQuery(key=reqQuery.data, value=b'dave', proof=b'0x12')
