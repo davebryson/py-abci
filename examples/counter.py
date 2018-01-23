@@ -9,6 +9,9 @@ from abci import (
     Result
 )
 
+from abci.types_pb2 import ResponseEndBlock
+
+
 # Tx encoding/decoding
 def encode_number(value):
     return struct.pack('>I', value)
@@ -45,6 +48,7 @@ class SimpleCounter(BaseApplication):
     def init_chain(self, v):
         """Set initial state on first run"""
         self.txCount = 0
+        self.last_block_height = 0
 
     def __valid_input(self, tx):
         """Check to see the given input is the next sequence in the count"""
@@ -66,10 +70,17 @@ class SimpleCounter(BaseApplication):
         self.txCount += 1
         return Result.ok()
 
+    def end_block(self, height):
+        """Called at the end of processing. If this is a stateful application
+        you can use the height from here to record the last_block_height"""
+        self.last_block_height = height
+        return ResponseEndBlock()
+
     def query(self, reqQuery):
         """Return the last tx count"""
         v = encode_number(self.txCount)
-        rq = ResponseQuery(code=0, key=b'count', value=v)
+        rq = ResponseQuery(
+            code=0, key=b'count', value=v, height=self.last_block_height)
         return rq
 
     def commit(self):
