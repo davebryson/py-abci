@@ -15,7 +15,7 @@ services:
       TENDERMINT_PORT: 46657
     command: python examples/counter.py
   tendermint:
-    image: tendermint/tendermint:0.13
+    image: tendermint/tendermint:0.15
     volumes:
       - ./tmdata:/tendermint
     entrypoint: ''
