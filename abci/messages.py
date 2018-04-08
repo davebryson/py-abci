@@ -88,11 +88,10 @@ def to_response_query(resQuery):
     r.query.CopyFrom(resQuery)
     return r
 
-def to_response_commit(code, data, log):
+def to_response_commit(data):
     r = Response()
-    r.commit.code =code
+    # Only data
     r.commit.data = data
-    r.commit.log =log
     return r
 
 def to_response_set_option(log):

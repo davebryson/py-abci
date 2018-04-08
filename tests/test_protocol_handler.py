@@ -1,4 +1,4 @@
-from abci.wire import *
+from abci.encoding import *
 from abci.messages import *
 from io import BytesIO
 import abci.types_pb2 as types

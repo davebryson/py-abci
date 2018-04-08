@@ -9,23 +9,22 @@
 
 Build blockchain applications in Python for Tendermint
 
+Version
+-------
+Supports ABCI v0.10.0
+
 Installation
 ------------
-Requires Python 3.6
+Requires Python >= 3.6
 
-``pip install abci``  OR
+``pip install abci``  OR ``python setup.py install``
 
-``python setup.py install``
-
-OR using PipEnv (http://docs.pipenv.org/en/latest/)
-
-``git clone https://github.com/davebryson/py-abci``
-
-``cd py-abci``
-
-``pipenv --three # for a python 3 virtualenv``
-
-``pipenv install``
+Generating Protobuf
+-------------------
+1. Install protoc
+2. Install go
+3. Install gogo protobuf via go
+4. Run `make gogo`
 
 
 Getting Started

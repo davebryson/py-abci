@@ -9,12 +9,13 @@ This can be a bit confusing in the app since gevent spawns a greenlet for each
 connection.  If one crashes you will not have full connectivity to Tendermint
 """
 import sys
+from io import BytesIO
 
 import gevent, signal
 from gevent.event import Event
 from gevent.server import StreamServer
 
-from .wire import *
+from .encoding import read_message, write_message, NODATA, FRAGDATA, OK
 from .messages import *
 from .types_pb2 import Request
 from .utils import get_logger
@@ -66,11 +67,10 @@ class ProtocolHandler(object):
 
     def commit(self, req):
         result = self.app.commit()
-        response = to_response_commit(result.code, result.data, result.log)
+        response = to_response_commit(result)
         return write_message(response)
 
     def begin_block(self, req):
-        #self.app.begin_block(req.begin_block.hash, req.begin_block.header)
         self.app.begin_block(req.begin_block)
         return write_message(to_response_begin_block())
 
@@ -79,7 +79,6 @@ class ProtocolHandler(object):
         return write_message(to_response_end_block(result))
 
     def init_chain(self, validators):
-        log.debug("running init_chain")
         self.app.init_chain(validators)
         return write_message(to_response_init_chain())
 
@@ -99,7 +98,6 @@ class ABCIServer(object):
 
     def start(self):
         self.server.start()
-        log.info(" ABCIServer started on port: {}".format(self.port))
 
     def stop(self):
         log.info("Shutting down server")
@@ -123,11 +121,9 @@ class ABCIServer(object):
     # If an error happens in 1 it still leaves the others open which
     # means you don't have all the connections available to TM
     def __handle_connection(self, socket, address):
-        log.debug(' ... connection from tendermint: {}:{} ...'.format(address[0], address[1]))
-
+        log.info(' ... connection from tendermint: {}:{} ...'.format(address[0], address[1]))
         data = BytesIO()
         carry_forward = b''
-
         while True:
             inbound = socket.recv(1024)
             msg_length = len(carry_forward) + len(inbound)
@@ -137,22 +133,20 @@ class ABCIServer(object):
             data.seek(0)
             carry_forward = b''
             if not data or msg_length == 0: return
-
             try:
                 while data.tell() < msg_length:
-                    req, err  = read_message(data, Request)
-                    # TODO: an err should be 1 ...
-                    # this is actually confusing see read_message
-                    if err == 0: return
-                    if err == -1:
-                        data.seek(req)
+                    result, code  = read_message(data, Request)
+
+                    if code == NODATA: return
+                    if code == FRAGDATA:
+                        print('FRAG')
+                        data.seek(result)
                         carry_forward = data.read(1024)
                         break
 
-                    req_type = req.WhichOneof("value")
-
-                    response = self.protocol.process(req_type, req)
-                    socket.sendall(response)
+                    req_type = result.WhichOneof("value")
+                    response = self.protocol.process(req_type, result)
+                    socket.send(response)
             except:
                 log.error(" Server Error: {}".format(sys.exc_info()[1]))
 

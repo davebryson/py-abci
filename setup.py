@@ -10,9 +10,12 @@ DIR = path.abspath(path.dirname(__file__))
 with open(path.join(DIR, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+
 setup(
     name='abci',
-    version='0.3.0',
+    version='0.4.0',
     description='Python based ABCI Server for Tendermint',
     long_description=long_description,
     url='https://github.com/davebryson/py-abci',
@@ -26,13 +29,6 @@ setup(
     ],
     keywords='blockchain tendermint abci',
     packages=find_packages(exclude=['tests']),
-    install_requires=[
-        "protobuf>=3.2.0",
-        "gevent>=1.2.1",
-        "colorlog>=3.0.1",
-        "pytest>=3.0.7",
-        "pytest-pythonpath>=0.7.1",
-        "pytest-cov>=2.5.1",
-    ],
-    python_requires='>=3',
+    install_requires=required,
+    python_requires='>=3.6',
 )

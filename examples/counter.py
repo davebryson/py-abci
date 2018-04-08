@@ -9,7 +9,7 @@ from abci import (
     Result
 )
 
-from abci.types_pb2 import ResponseEndBlock
+from abci.types_pb2 import ResponseEndBlock, ResponseCommit
 
 
 # Tx encoding/decoding
@@ -18,6 +18,7 @@ def encode_number(value):
 
 def decode_number(raw):
     return int.from_bytes(raw, byteorder='big')
+
 
 class SimpleCounter(BaseApplication):
     """Simple counting app.  It only excepts values sent to it in order.  The
@@ -41,6 +42,8 @@ class SimpleCounter(BaseApplication):
 
     def info(self):
         r = ResponseInfo()
+        r.data = "counter"
+        r.version = "1.0"
         r.last_block_height = 0
         r.last_block_app_hash = b''
         return r
@@ -86,7 +89,7 @@ class SimpleCounter(BaseApplication):
     def commit(self):
         """Return the current encode state value to tendermint"""
         h = struct.pack('>Q', self.txCount)
-        return Result.ok(data=h)
+        return h
 
 if __name__ == '__main__':
     app = ABCIServer(app=SimpleCounter())
