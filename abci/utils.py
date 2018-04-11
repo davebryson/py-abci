@@ -1,5 +1,7 @@
-import binascii, logging, colorlog
+
+import struct
 from math import ceil
+import binascii, logging, colorlog
 
 def str_to_bytes(data):
     if isinstance(data, str):

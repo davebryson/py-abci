@@ -9,6 +9,7 @@ This can be a bit confusing in the app since gevent spawns a greenlet for each
 connection.  If one crashes you will not have full connectivity to Tendermint
 """
 import sys
+import struct
 from io import BytesIO
 
 import gevent, signal
@@ -86,12 +87,35 @@ class ProtocolHandler(object):
         response = to_response_exception("Unknown request!")
         return write_message(response)
 
+
+def decode_varint(value):
+    vbyte = 0
+    while True:
+       vbyte, = struct.unpack('b', value)
+       if not vbyte & 0x80:
+           break
+    # from int64
+    vbyte >>= 1
+    return vbyte
+
+def read_varint_stream(sock):
+    sz = decode_varint(sock.recv(1))
+    data = b''
+    print(f'SIZE: {sz}')
+    while sz:
+        buf = sock.recv(sz)
+        print(f'BUFFER: {buf}')
+        if not buf:
+            raise ValueError("Buffer receive truncated")
+        data += buf
+        sz -= len(buf)
+    return data
+
 class ABCIServer(object):
     def __init__(self, port=46658, app=None):
         if not app or not isinstance(app, BaseApplication):
             log.error("Application missing or not an instance of Base Application")
             raise TypeError("Application missing or not an instance of Base Application")
-
         self.port = port
         self.protocol = ProtocolHandler(app)
         self.server = StreamServer(('0.0.0.0', port), handle=self.__handle_connection)
@@ -108,12 +132,14 @@ class ABCIServer(object):
         the server and watch for signals to stop the server"""
         self.server.start()
         log.info(" ABCIServer started on port: {}".format(self.port))
+
         # wait for interrupt
         evt = Event()
         gevent.signal(signal.SIGQUIT, evt.set)
         gevent.signal(signal.SIGTERM, evt.set)
         gevent.signal(signal.SIGINT, evt.set)
         evt.wait()
+
         log.info("Shutting down server")
         self.server.stop()
 
@@ -121,7 +147,7 @@ class ABCIServer(object):
     # If an error happens in 1 it still leaves the others open which
     # means you don't have all the connections available to TM
     def __handle_connection(self, socket, address):
-        log.info(' ... connection from tendermint: {}:{} ...'.format(address[0], address[1]))
+        log.info(' ... connection from Tendermint: {}:{} ...'.format(address[0], address[1]))
         data = BytesIO()
         carry_forward = b''
         while True:
@@ -136,14 +162,11 @@ class ABCIServer(object):
             try:
                 while data.tell() < msg_length:
                     result, code  = read_message(data, Request)
-
                     if code == NODATA: return
                     if code == FRAGDATA:
-                        print('FRAG')
                         data.seek(result)
                         carry_forward = data.read(1024)
                         break
-
                     req_type = result.WhichOneof("value")
                     response = self.protocol.process(req_type, result)
                     socket.send(response)

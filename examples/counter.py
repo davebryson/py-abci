@@ -11,7 +11,6 @@ from abci import (
 
 from abci.types_pb2 import ResponseEndBlock, ResponseCommit
 
-
 # Tx encoding/decoding
 def encode_number(value):
     return struct.pack('>I', value)
