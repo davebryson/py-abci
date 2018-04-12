@@ -15,7 +15,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='abci',
-    version='0.4.0',
+    version='0.4.1',
     description='Python based ABCI Server for Tendermint',
     long_description=long_description,
     url='https://github.com/davebryson/py-abci',
