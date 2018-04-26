@@ -161,11 +161,11 @@ class ABCIServer(object):
             if not data or msg_length == 0: return
             try:
                 while data.tell() < msg_length:
-                    result, code  = read_message(data, Request)
+                    result, code = read_message(data, Request)
                     if code == NODATA: return
                     if code == FRAGDATA:
                         data.seek(result)
-                        carry_forward = data.read(1024)
+                        carry_forward = data.read(msg_length)
                         break
                     req_type = result.WhichOneof("value")
                     response = self.protocol.process(req_type, result)
