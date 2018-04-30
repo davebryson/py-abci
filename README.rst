@@ -15,7 +15,7 @@ Supports ABCI v0.10.0
 
 Installation
 ------------
-Requires Python >= 3.6
+Requires Python >= 3.6.5
 
 ``pip install abci``  OR ``python setup.py install``
 
