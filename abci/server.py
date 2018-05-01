@@ -158,11 +158,16 @@ class ABCIServer(object):
 
             data.seek(0)
             carry_forward = b''
-            if not data or msg_length == 0: return
+            if not data or msg_length == 0:
+                return
             try:
                 while data.tell() < msg_length:
+                    initial_data_tell = data.tell()
                     result, code = read_message(data, Request)
-                    if code == NODATA: return
+                    if code == NODATA:
+                        data.seek(initial_data_tell)
+                        carry_forward = data.read(msg_length - data.tell())
+                        break
                     if code == FRAGDATA:
                         data.seek(result)
                         carry_forward = data.read(msg_length)
