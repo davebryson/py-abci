@@ -151,7 +151,10 @@ class ABCIServer(object):
         data = BytesIO()
         carry_forward = b''
         while True:
-            inbound = socket.recv(1024)
+            # Read max 100MB of transaction from the socket
+            # NOTE: It doesn't make sense to have transactions greater than
+            # 100MB. This assumption simplifies the read and deocding logic
+            inbound = socket.recv(104857600)
             msg_length = len(carry_forward) + len(inbound)
             data.write(carry_forward)
             data.write(inbound)

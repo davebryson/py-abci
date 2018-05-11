@@ -11,11 +11,11 @@ with open(path.join(DIR, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='abci',
-    version='0.4.4',
+    name='bigchaindb-abci',
+    version='0.4.5',
     description='Python based ABCI Server for Tendermint',
     long_description=long_description,
-    url='https://github.com/davebryson/py-abci',
+    url='https://github.com/kansi/py-abci',
     author='Dave Bryson',
     license='Apache 2.0',
     classifiers=[
