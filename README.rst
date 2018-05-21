@@ -11,7 +11,7 @@ Build blockchain applications in Python for Tendermint
 
 Version
 -------
-Supports ABCI v0.10.0
+Supports ABCI v0.10.3 and latest Tendermint
 
 Installation
 ------------
@@ -21,6 +21,9 @@ Requires Python >= 3.6.5
 
 Generating Protobuf
 -------------------
+*ONLY* needed for developing this code base, not to create apps.  If you
+just want to create apps, goto Getting Started
+
 1. Install protoc
 2. Install go
 3. Install gogo protobuf via go
