@@ -43,21 +43,24 @@ def write_message(message):
     buffer.write(bz)
     return buffer.getvalue()
 
-def read_message(reader, message):
+
+def read_messages(reader, message):
     """ read the message based on the varintself.
     Returns: (value, code) based on results
     """
-    current_position = reader.tell()
-    len64 = decode_varint(reader)
-    length = len64 >> 1
-    slice = reader.read(length)
 
-    if len(slice) == 0:
-        return None, NODATA
+    while True:
+        try:
+            length = decode_varint(reader) >> 1
+        except EOFError:
+            return
 
-    if len(slice) < length:
-        return current_position, FRAGDATA
+        data = reader.read(length)
 
-    m = message()
-    m.ParseFromString(slice)
-    return m, OK
+        if len(data) < length:
+            return
+
+        m = message()
+        m.ParseFromString(data)
+
+        yield m

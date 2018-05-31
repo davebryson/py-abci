@@ -25,44 +25,38 @@ def test_handler():
 
     r = to_response_echo('hello')
     data = p.process('echo', r)
-    res, err  = read_message(BytesIO(data), types.Response)
-    assert res
-    assert 'echo' == res.WhichOneof("value")
-    assert res.echo.message == 'hello'
+    message = next(read_messages(BytesIO(data), types.Response))
+    assert 'echo' == message.WhichOneof("value")
+    assert message.echo.message == 'hello'
 
     data = p.process('flush', None)
-    res, err  = read_message(BytesIO(data), types.Response)
-    assert res
-    assert 'flush' == res.WhichOneof("value")
+    message = next(read_messages(BytesIO(data), types.Response))
+    assert 'flush' == message.WhichOneof("value")
 
     data = p.process('info', None)
-    res, err  = read_message(BytesIO(data), types.Response)
-    assert res
-    assert 'info' == res.WhichOneof("value")
-    assert res.info.data == 'hellothere'
+    message = next(read_messages(BytesIO(data), types.Response))
+    assert 'info' == message.WhichOneof("value")
+    assert message.info.data == 'hellothere'
 
     r = to_request_deliver_tx(b'0x1234')
     data = p.process('deliver_tx', r)
-    res, err  = read_message(BytesIO(data), types.Response)
-    assert res
-    assert 'deliver_tx' == res.WhichOneof("value")
-    assert res.deliver_tx.code == 0
-    assert res.deliver_tx.data == b'0x1234'
+    message = next(read_messages(BytesIO(data), types.Response))
+    assert 'deliver_tx' == message.WhichOneof("value")
+    assert message.deliver_tx.code == 0
+    assert message.deliver_tx.data == b'0x1234'
 
     r = to_request_check_tx(b'0x1234')
     data = p.process('check_tx', r)
-    res, err  = read_message(BytesIO(data), types.Response)
-    assert res
-    assert 'check_tx' == res.WhichOneof("value")
-    assert res.check_tx.code == 0
-    assert res.check_tx.data == b'0x1234'
+    message = next(read_messages(BytesIO(data), types.Response))
+    assert 'check_tx' == message.WhichOneof("value")
+    assert message.check_tx.code == 0
+    assert message.check_tx.data == b'0x1234'
 
     r = to_request_query(data=b'name')
     data = p.process('query', r)
-    res, err  = read_message(BytesIO(data), types.Response)
-    assert res
-    assert 'query' == res.WhichOneof("value")
-    assert res.query.key == b'name'
-    assert res.query.value == b'dave'
-    assert res.query.code == 0
-    assert res.query.proof == b'0x12'
+    message = next(read_messages(BytesIO(data), types.Response))
+    assert 'query' == message.WhichOneof("value")
+    assert message.query.key == b'name'
+    assert message.query.value == b'dave'
+    assert message.query.code == 0
+    assert message.query.proof == b'0x12'
