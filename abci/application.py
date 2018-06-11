@@ -1,83 +1,91 @@
-from .messages import *
-from .types_pb2 import *
+
 from .utils import str_to_bytes
+from .types_pb2 import (
+    RequestInitChain, ResponseInitChain,
+    RequestInfo, ResponseInfo,
+    RequestSetOption, ResponseSetOption,
+    ResponseDeliverTx,
+    ResponseCheckTx,
+    RequestQuery, ResponseQuery,
+    RequestBeginBlock, ResponseBeginBlock,
+    RequestEndBlock, ResponseEndBlock,
+    ResponseCommit,
+)
 
-OK = 0
-InternalError = 1
+CodeTypeOk = 0
 
-class Result(object):
-    """Return object for certain abci calls"""
-    def __init__(self, code=OK, data=b'', log=''):
-        self.code = code
-        self.data = str_to_bytes(data)
-        self.log = log
-
-    @classmethod
-    def ok(cls, data=b'', log=''):
-        data = str_to_bytes(data)
-        return cls(OK, data, log)
-
-    @classmethod
-    def error(cls, code=InternalError, data=b'',log=''):
-        data = str_to_bytes(data)
-        return cls(code, data, log)
-
-    def is_ok(self):
-        return self.code == OK
-
-    def is_error(self):
-        return self.code != OK
-
-    def str(self):
-        return "ABCI[code:{}, data:{}, log:{}]".format(self.code, self.data, self.log)
-
-class BaseApplication(object):
+class BaseApplication:
     """
     Base ABCI Application. Extend this and override what's needed for your app
     """
-    def init_chain(self, reqInitChain):
-        """Called only once when blockheight == 0"""
-        pass
 
-    def info(self):
-        """ Called by ABCI when the app first starts. A stateful application
+    def init_chain(self, req: RequestInitChain) -> ResponseInitChain:
+        """
+        Called only once - usually at genesis or when blockheight == 0.
+        See info()
+        """
+        return ResponseInitChain()
+
+    def info(self, req: RequestInfo) -> ResponseInfo:
+        """
+        Called by ABCI when the app first starts. A stateful application
         should alway return the last blockhash and blockheight to prevent Tendermint
-        replaying from the beginning. If blockheight == 0, Tendermint will call init_chain
+        from replaying the transaction log from the beginning.  This values are used
+        to help Tendermint determine how to synch the node.
+        If blockheight == 0, Tendermint will call init_chain()
         """
         r = ResponseInfo()
         r.last_block_height = 0
         r.last_block_app_hash = b''
         return r
 
-    def set_option(self, k, v):
+    def set_option(self, req: RequestSetOption) -> ResponseSetOption:
         """Can be used to set key value pairs in storage.  Not always used"""
-        return 'key: {} value: {}'.format(k,v)
+        return ResponseSetOption()
 
-    def deliver_tx(self, tx):
-        """Called to calculate state on a given block during the consensus process"""
-        return Result.ok(data='delivertx')
+    def deliver_tx(self, tx: bytes) -> ResponseDeliverTx:
+        """
+        Process the tx and apply state changes.
+        This is called via the consensus connection.
+        A non-zero response code implies an error and will reject the tx
+        """
+        return ResponseDeliverTx(code=CodeTypeOk)
 
-    def check_tx(self, tx):
-        """Use to validate incoming transactions.  If Result.ok is returned,
-        the Tx will be added to Tendermint's mempool"""
-        return Result.ok(data='checktx')
+    def check_tx(self, tx: bytes) -> ResponseCheckTx:
+        """
+        Use to validate incoming transactions.  If the returned resp.code is 0 (OK),
+        the tx will be added to Tendermint's mempool for consideration in a block.
+        A non-zero response code implies an error and will reject the tx
+        """
+        return ResponseCheckTx(code=CodeTypeOk)
 
-    def query(self, reqQuery):
-        """Called over RPC to query the application state"""
-        rq = ResponseQuery(code=OK, key=reqQuery.data, value=b'example result')
-        return rq
+    def query(self, req: RequestQuery) -> ResponseQuery:
+        """
+        This is commonly used to query the state of the application.
+        A non-zero 'code' in the response is used to indicate and error.
+        """
+        return ResponseQuery(code=CodeTypeOk)
 
-    def begin_block(self, reqBeginBlock):
-        """Called to process a block"""
-        pass
+    def begin_block(self, req: RequestBeginBlock) -> ResponseBeginBlock:
+        """
+        Called during the consensus process.  The overall flow is:
+        begin_block()
+         for each tx:
+           deliver_tx(tx)
+        end_block()
+        commit()
+        """
+        return ResponseBeginBlock()
 
-    def end_block(self, height):
+    def end_block(self, req: RequestEndBlock) -> ResponseEndBlock:
         """Called at the end of processing. If this is a stateful application
         you can use the height from here to record the last_block_height"""
         return ResponseEndBlock()
 
-    def commit(self):
-        """Called to get the result of processing transactions.  If this is a
-        stateful application using a Merkle Tree, this method should return
-        the root hash of the Merkle Tree in the Result data field"""
-        return Result.ok(data=b'')
+    def commit(self) -> ResponseCommit:
+        """
+        Called after the end of a block.  Normally this should return the results
+        of the computation, such as the root hash of a merkletree.  The returned
+        data is used as part of the consensus process.
+        """
+        return ResponseCommit()

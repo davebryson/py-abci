@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='types.proto',
   package='types',
   syntax='proto3',
-  serialized_pb=_b('\n\x0btypes.proto\x12\x05types\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a/github.com/tendermint/tmlibs/common/types.proto\"\xe4\x03\n\x07Request\x12\"\n\x04\x65\x63ho\x18\x02 \x01(\x0b\x32\x12.types.RequestEchoH\x00\x12$\n\x05\x66lush\x18\x03 \x01(\x0b\x32\x13.types.RequestFlushH\x00\x12\"\n\x04info\x18\x04 \x01(\x0b\x32\x12.types.RequestInfoH\x00\x12-\n\nset_option\x18\x05 \x01(\x0b\x32\x17.types.RequestSetOptionH\x00\x12-\n\ninit_chain\x18\x06 \x01(\x0b\x32\x17.types.RequestInitChainH\x00\x12$\n\x05query\x18\x07 \x01(\x0b\x32\x13.types.RequestQueryH\x00\x12/\n\x0b\x62\x65gin_block\x18\x08 \x01(\x0b\x32\x18.types.RequestBeginBlockH\x00\x12)\n\x08\x63heck_tx\x18\t \x01(\x0b\x32\x15.types.RequestCheckTxH\x00\x12-\n\ndeliver_tx\x18\x13 \x01(\x0b\x32\x17.types.RequestDeliverTxH\x00\x12+\n\tend_block\x18\x0b \x01(\x0b\x32\x16.types.RequestEndBlockH\x00\x12&\n\x06\x63ommit\x18\x0c \x01(\x0b\x32\x14.types.RequestCommitH\x00\x42\x07\n\x05value\"\x1e\n\x0bRequestEcho\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x0e\n\x0cRequestFlush\"\x1e\n\x0bRequestInfo\x12\x0f\n\x07version\x18\x01 \x01(\t\".\n\x10RequestSetOption\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"W\n\x10RequestInitChain\x12*\n\nvalidators\x18\x01 \x03(\x0b\x32\x10.types.ValidatorB\x04\xc8\xde\x1f\x00\x12\x17\n\x0f\x61pp_state_bytes\x18\x02 \x01(\x0c\"I\n\x0cRequestQuery\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x0c\n\x04path\x18\x02 \x01(\t\x12\x0e\n\x06height\x18\x03 \x01(\x03\x12\r\n\x05prove\x18\x04 \x01(\x08\"\x96\x01\n\x11RequestBeginBlock\x12\x0c\n\x04hash\x18\x01 \x01(\x0c\x12#\n\x06header\x18\x02 \x01(\x0b\x32\r.types.HeaderB\x04\xc8\xde\x1f\x00\x12\x19\n\x11\x61\x62sent_validators\x18\x03 \x03(\x05\x12\x33\n\x14\x62yzantine_validators\x18\x04 \x03(\x0b\x32\x0f.types.EvidenceB\x04\xc8\xde\x1f\x00\"\x1c\n\x0eRequestCheckTx\x12\n\n\x02tx\x18\x01 \x01(\x0c\"\x1e\n\x10RequestDeliverTx\x12\n\n\x02tx\x18\x01 \x01(\x0c\"!\n\x0fRequestEndBlock\x12\x0e\n\x06height\x18\x01 \x01(\x03\"\x0f\n\rRequestCommit\"\x9f\x04\n\x08Response\x12-\n\texception\x18\x01 \x01(\x0b\x32\x18.types.ResponseExceptionH\x00\x12#\n\x04\x65\x63ho\x18\x02 \x01(\x0b\x32\x13.types.ResponseEchoH\x00\x12%\n\x05\x66lush\x18\x03 \x01(\x0b\x32\x14.types.ResponseFlushH\x00\x12#\n\x04info\x18\x04 \x01(\x0b\x32\x13.types.ResponseInfoH\x00\x12.\n\nset_option\x18\x05 \x01(\x0b\x32\x18.types.ResponseSetOptionH\x00\x12.\n\ninit_chain\x18\x06 \x01(\x0b\x32\x18.types.ResponseInitChainH\x00\x12%\n\x05query\x18\x07 \x01(\x0b\x32\x14.types.ResponseQueryH\x00\x12\x30\n\x0b\x62\x65gin_block\x18\x08 \x01(\x0b\x32\x19.types.ResponseBeginBlockH\x00\x12*\n\x08\x63heck_tx\x18\t \x01(\x0b\x32\x16.types.ResponseCheckTxH\x00\x12.\n\ndeliver_tx\x18\n \x01(\x0b\x32\x18.types.ResponseDeliverTxH\x00\x12,\n\tend_block\x18\x0b \x01(\x0b\x32\x17.types.ResponseEndBlockH\x00\x12\'\n\x06\x63ommit\x18\x0c \x01(\x0b\x32\x15.types.ResponseCommitH\x00\x42\x07\n\x05value\"\"\n\x11ResponseException\x12\r\n\x05\x65rror\x18\x01 \x01(\t\"\x1f\n\x0cResponseEcho\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x0f\n\rResponseFlush\"e\n\x0cResponseInfo\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x19\n\x11last_block_height\x18\x03 \x01(\x03\x12\x1b\n\x13last_block_app_hash\x18\x04 \x01(\x0c\"<\n\x11ResponseSetOption\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0b\n\x03log\x18\x03 \x01(\t\x12\x0c\n\x04info\x18\x04 \x01(\t\"\x13\n\x11ResponseInitChain\"\x82\x01\n\rResponseQuery\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0b\n\x03log\x18\x03 \x01(\t\x12\x0c\n\x04info\x18\x04 \x01(\t\x12\r\n\x05index\x18\x05 \x01(\x03\x12\x0b\n\x03key\x18\x06 \x01(\x0c\x12\r\n\x05value\x18\x07 \x01(\x0c\x12\r\n\x05proof\x18\x08 \x01(\x0c\x12\x0e\n\x06height\x18\t \x01(\x03\"\x14\n\x12ResponseBeginBlock\"\xb7\x01\n\x0fResponseCheckTx\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12\x0b\n\x03log\x18\x03 \x01(\t\x12\x0c\n\x04info\x18\x04 \x01(\t\x12\x12\n\ngas_wanted\x18\x05 \x01(\x03\x12\x34\n\x04tags\x18\x07 \x03(\x0b\x32\x0e.common.KVPairB\x16\xc8\xde\x1f\x00\xea\xde\x1f\x0etags,omitempty\x12#\n\x03\x66\x65\x65\x18\x08 \x01(\x0b\x32\x10.common.KI64PairB\x04\xc8\xde\x1f\x00\"\xa6\x01\n\x11ResponseDeliverTx\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12\x0b\n\x03log\x18\x03 \x01(\t\x12\x0c\n\x04info\x18\x04 \x01(\t\x12\x12\n\ngas_wanted\x18\x05 \x01(\x03\x12\x10\n\x08gas_used\x18\x06 \x01(\x03\x12\x34\n\x04tags\x18\x07 \x03(\x0b\x32\x0e.common.KVPairB\x16\xc8\xde\x1f\x00\xea\xde\x1f\x0etags,omitempty\"~\n\x10ResponseEndBlock\x12\x31\n\x11validator_updates\x18\x01 \x03(\x0b\x32\x10.types.ValidatorB\x04\xc8\xde\x1f\x00\x12\x37\n\x17\x63onsensus_param_updates\x18\x02 \x01(\x0b\x32\x16.types.ConsensusParams\"\x1e\n\x0eResponseCommit\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"\x81\x01\n\x0f\x43onsensusParams\x12$\n\nblock_size\x18\x01 \x01(\x0b\x32\x10.types.BlockSize\x12\x1e\n\x07tx_size\x18\x02 \x01(\x0b\x32\r.types.TxSize\x12(\n\x0c\x62lock_gossip\x18\x03 \x01(\x0b\x32\x12.types.BlockGossip\"@\n\tBlockSize\x12\x11\n\tmax_bytes\x18\x01 \x01(\x05\x12\x0f\n\x07max_txs\x18\x02 \x01(\x05\x12\x0f\n\x07max_gas\x18\x03 \x01(\x03\",\n\x06TxSize\x12\x11\n\tmax_bytes\x18\x01 \x01(\x05\x12\x0f\n\x07max_gas\x18\x02 \x01(\x03\",\n\x0b\x42lockGossip\x12\x1d\n\x15\x62lock_part_size_bytes\x18\x01 \x01(\x05\"\xea\x01\n\x06Header\x12\x1d\n\x08\x63hain_id\x18\x01 \x01(\tB\x0b\xe2\xde\x1f\x07\x43hainID\x12\x0e\n\x06height\x18\x02 \x01(\x03\x12\x0c\n\x04time\x18\x03 \x01(\x03\x12\x0f\n\x07num_txs\x18\x04 \x01(\x05\x12:\n\rlast_block_id\x18\x05 \x01(\x0b\x32\x0e.types.BlockIDB\x13\xe2\xde\x1f\x0bLastBlockID\xc8\xde\x1f\x00\x12\x18\n\x10last_commit_hash\x18\x06 \x01(\x0c\x12\x11\n\tdata_hash\x18\x07 \x01(\x0c\x12\x17\n\x0fvalidators_hash\x18\x08 \x01(\x0c\x12\x10\n\x08\x61pp_hash\x18\t \x01(\x0c\"B\n\x07\x42lockID\x12\x0c\n\x04hash\x18\x01 \x01(\x0c\x12)\n\x05parts\x18\x02 \x01(\x0b\x32\x14.types.PartSetHeaderB\x04\xc8\xde\x1f\x00\",\n\rPartSetHeader\x12\r\n\x05total\x18\x01 \x01(\x05\x12\x0c\n\x04hash\x18\x02 \x01(\x0c\"+\n\tValidator\x12\x0f\n\x07pub_key\x18\x01 \x01(\x0c\x12\r\n\x05power\x18\x02 \x01(\x03\"+\n\x08\x45vidence\x12\x0f\n\x07pub_key\x18\x01 \x01(\x0c\x12\x0e\n\x06height\x18\x02 \x01(\x03\x32\x8c\x05\n\x0f\x41\x42\x43IApplication\x12/\n\x04\x45\x63ho\x12\x12.types.RequestEcho\x1a\x13.types.ResponseEcho\x12\x32\n\x05\x46lush\x12\x13.types.RequestFlush\x1a\x14.types.ResponseFlush\x12/\n\x04Info\x12\x12.types.RequestInfo\x1a\x13.types.ResponseInfo\x12>\n\tSetOption\x12\x17.types.RequestSetOption\x1a\x18.types.ResponseSetOption\x12>\n\tDeliverTx\x12\x17.types.RequestDeliverTx\x1a\x18.types.ResponseDeliverTx\x12\x38\n\x07\x43heckTx\x12\x15.types.RequestCheckTx\x1a\x16.types.ResponseCheckTx\x12\x32\n\x05Query\x12\x13.types.RequestQuery\x1a\x14.types.ResponseQuery\x12\x35\n\x06\x43ommit\x12\x14.types.RequestCommit\x1a\x15.types.ResponseCommit\x12>\n\tInitChain\x12\x17.types.RequestInitChain\x1a\x18.types.ResponseInitChain\x12\x41\n\nBeginBlock\x12\x18.types.RequestBeginBlock\x1a\x19.types.ResponseBeginBlock\x12;\n\x08\x45ndBlock\x12\x16.types.RequestEndBlock\x1a\x17.types.ResponseEndBlockb\x06proto3')
+  serialized_pb=_b('\n\x0btypes.proto\x12\x05types\x1a-github.com/gogo/protobuf/gogoproto/gogo.proto\x1a/github.com/tendermint/tmlibs/common/types.proto\"\xe4\x03\n\x07Request\x12\"\n\x04\x65\x63ho\x18\x02 \x01(\x0b\x32\x12.types.RequestEchoH\x00\x12$\n\x05\x66lush\x18\x03 \x01(\x0b\x32\x13.types.RequestFlushH\x00\x12\"\n\x04info\x18\x04 \x01(\x0b\x32\x12.types.RequestInfoH\x00\x12-\n\nset_option\x18\x05 \x01(\x0b\x32\x17.types.RequestSetOptionH\x00\x12-\n\ninit_chain\x18\x06 \x01(\x0b\x32\x17.types.RequestInitChainH\x00\x12$\n\x05query\x18\x07 \x01(\x0b\x32\x13.types.RequestQueryH\x00\x12/\n\x0b\x62\x65gin_block\x18\x08 \x01(\x0b\x32\x18.types.RequestBeginBlockH\x00\x12)\n\x08\x63heck_tx\x18\t \x01(\x0b\x32\x15.types.RequestCheckTxH\x00\x12-\n\ndeliver_tx\x18\x13 \x01(\x0b\x32\x17.types.RequestDeliverTxH\x00\x12+\n\tend_block\x18\x0b \x01(\x0b\x32\x16.types.RequestEndBlockH\x00\x12&\n\x06\x63ommit\x18\x0c \x01(\x0b\x32\x14.types.RequestCommitH\x00\x42\x07\n\x05value\"\x1e\n\x0bRequestEcho\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x0e\n\x0cRequestFlush\"\x1e\n\x0bRequestInfo\x12\x0f\n\x07version\x18\x01 \x01(\t\".\n\x10RequestSetOption\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\"W\n\x10RequestInitChain\x12*\n\nvalidators\x18\x01 \x03(\x0b\x32\x10.types.ValidatorB\x04\xc8\xde\x1f\x00\x12\x17\n\x0f\x61pp_state_bytes\x18\x02 \x01(\x0c\"I\n\x0cRequestQuery\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\x0c\x12\x0c\n\x04path\x18\x02 \x01(\t\x12\x0e\n\x06height\x18\x03 \x01(\x03\x12\r\n\x05prove\x18\x04 \x01(\x08\"\x96\x01\n\x11RequestBeginBlock\x12\x0c\n\x04hash\x18\x01 \x01(\x0c\x12#\n\x06header\x18\x02 \x01(\x0b\x32\r.types.HeaderB\x04\xc8\xde\x1f\x00\x12\x19\n\x11\x61\x62sent_validators\x18\x03 \x03(\x05\x12\x33\n\x14\x62yzantine_validators\x18\x04 \x03(\x0b\x32\x0f.types.EvidenceB\x04\xc8\xde\x1f\x00\"\x1c\n\x0eRequestCheckTx\x12\n\n\x02tx\x18\x01 \x01(\x0c\"\x1e\n\x10RequestDeliverTx\x12\n\n\x02tx\x18\x01 \x01(\x0c\"!\n\x0fRequestEndBlock\x12\x0e\n\x06height\x18\x01 \x01(\x03\"\x0f\n\rRequestCommit\"\x9f\x04\n\x08Response\x12-\n\texception\x18\x01 \x01(\x0b\x32\x18.types.ResponseExceptionH\x00\x12#\n\x04\x65\x63ho\x18\x02 \x01(\x0b\x32\x13.types.ResponseEchoH\x00\x12%\n\x05\x66lush\x18\x03 \x01(\x0b\x32\x14.types.ResponseFlushH\x00\x12#\n\x04info\x18\x04 \x01(\x0b\x32\x13.types.ResponseInfoH\x00\x12.\n\nset_option\x18\x05 \x01(\x0b\x32\x18.types.ResponseSetOptionH\x00\x12.\n\ninit_chain\x18\x06 \x01(\x0b\x32\x18.types.ResponseInitChainH\x00\x12%\n\x05query\x18\x07 \x01(\x0b\x32\x14.types.ResponseQueryH\x00\x12\x30\n\x0b\x62\x65gin_block\x18\x08 \x01(\x0b\x32\x19.types.ResponseBeginBlockH\x00\x12*\n\x08\x63heck_tx\x18\t \x01(\x0b\x32\x16.types.ResponseCheckTxH\x00\x12.\n\ndeliver_tx\x18\n \x01(\x0b\x32\x18.types.ResponseDeliverTxH\x00\x12,\n\tend_block\x18\x0b \x01(\x0b\x32\x17.types.ResponseEndBlockH\x00\x12\'\n\x06\x63ommit\x18\x0c \x01(\x0b\x32\x15.types.ResponseCommitH\x00\x42\x07\n\x05value\"\"\n\x11ResponseException\x12\r\n\x05\x65rror\x18\x01 \x01(\t\"\x1f\n\x0cResponseEcho\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x0f\n\rResponseFlush\"e\n\x0cResponseInfo\x12\x0c\n\x04\x64\x61ta\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\t\x12\x19\n\x11last_block_height\x18\x03 \x01(\x03\x12\x1b\n\x13last_block_app_hash\x18\x04 \x01(\x0c\"<\n\x11ResponseSetOption\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0b\n\x03log\x18\x03 \x01(\t\x12\x0c\n\x04info\x18\x04 \x01(\t\"\x13\n\x11ResponseInitChain\"\x82\x01\n\rResponseQuery\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0b\n\x03log\x18\x03 \x01(\t\x12\x0c\n\x04info\x18\x04 \x01(\t\x12\r\n\x05index\x18\x05 \x01(\x03\x12\x0b\n\x03key\x18\x06 \x01(\x0c\x12\r\n\x05value\x18\x07 \x01(\x0c\x12\r\n\x05proof\x18\x08 \x01(\x0c\x12\x0e\n\x06height\x18\t \x01(\x03\"\x14\n\x12ResponseBeginBlock\"\xc9\x01\n\x0fResponseCheckTx\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12\x0b\n\x03log\x18\x03 \x01(\t\x12\x0c\n\x04info\x18\x04 \x01(\t\x12\x12\n\ngas_wanted\x18\x05 \x01(\x03\x12\x10\n\x08gas_used\x18\x06 \x01(\x03\x12\x34\n\x04tags\x18\x07 \x03(\x0b\x32\x0e.common.KVPairB\x16\xc8\xde\x1f\x00\xea\xde\x1f\x0etags,omitempty\x12#\n\x03\x66\x65\x65\x18\x08 \x01(\x0b\x32\x10.common.KI64PairB\x04\xc8\xde\x1f\x00\"\xcb\x01\n\x11ResponseDeliverTx\x12\x0c\n\x04\x63ode\x18\x01 \x01(\r\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\x12\x0b\n\x03log\x18\x03 \x01(\t\x12\x0c\n\x04info\x18\x04 \x01(\t\x12\x12\n\ngas_wanted\x18\x05 \x01(\x03\x12\x10\n\x08gas_used\x18\x06 \x01(\x03\x12\x34\n\x04tags\x18\x07 \x03(\x0b\x32\x0e.common.KVPairB\x16\xc8\xde\x1f\x00\xea\xde\x1f\x0etags,omitempty\x12#\n\x03\x66\x65\x65\x18\x08 \x01(\x0b\x32\x10.common.KI64PairB\x04\xc8\xde\x1f\x00\"~\n\x10ResponseEndBlock\x12\x31\n\x11validator_updates\x18\x01 \x03(\x0b\x32\x10.types.ValidatorB\x04\xc8\xde\x1f\x00\x12\x37\n\x17\x63onsensus_param_updates\x18\x02 \x01(\x0b\x32\x16.types.ConsensusParams\"\x1e\n\x0eResponseCommit\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\x0c\"\x81\x01\n\x0f\x43onsensusParams\x12$\n\nblock_size\x18\x01 \x01(\x0b\x32\x10.types.BlockSize\x12\x1e\n\x07tx_size\x18\x02 \x01(\x0b\x32\r.types.TxSize\x12(\n\x0c\x62lock_gossip\x18\x03 \x01(\x0b\x32\x12.types.BlockGossip\"@\n\tBlockSize\x12\x11\n\tmax_bytes\x18\x01 \x01(\x05\x12\x0f\n\x07max_txs\x18\x02 \x01(\x05\x12\x0f\n\x07max_gas\x18\x03 \x01(\x03\",\n\x06TxSize\x12\x11\n\tmax_bytes\x18\x01 \x01(\x05\x12\x0f\n\x07max_gas\x18\x02 \x01(\x03\",\n\x0b\x42lockGossip\x12\x1d\n\x15\x62lock_part_size_bytes\x18\x01 \x01(\x05\"\xea\x01\n\x06Header\x12\x1d\n\x08\x63hain_id\x18\x01 \x01(\tB\x0b\xe2\xde\x1f\x07\x43hainID\x12\x0e\n\x06height\x18\x02 \x01(\x03\x12\x0c\n\x04time\x18\x03 \x01(\x03\x12\x0f\n\x07num_txs\x18\x04 \x01(\x05\x12:\n\rlast_block_id\x18\x05 \x01(\x0b\x32\x0e.types.BlockIDB\x13\xe2\xde\x1f\x0bLastBlockID\xc8\xde\x1f\x00\x12\x18\n\x10last_commit_hash\x18\x06 \x01(\x0c\x12\x11\n\tdata_hash\x18\x07 \x01(\x0c\x12\x17\n\x0fvalidators_hash\x18\x08 \x01(\x0c\x12\x10\n\x08\x61pp_hash\x18\t \x01(\x0c\"B\n\x07\x42lockID\x12\x0c\n\x04hash\x18\x01 \x01(\x0c\x12)\n\x05parts\x18\x02 \x01(\x0b\x32\x14.types.PartSetHeaderB\x04\xc8\xde\x1f\x00\",\n\rPartSetHeader\x12\r\n\x05total\x18\x01 \x01(\x05\x12\x0c\n\x04hash\x18\x02 \x01(\x0c\"+\n\tValidator\x12\x0f\n\x07pub_key\x18\x01 \x01(\x0c\x12\r\n\x05power\x18\x02 \x01(\x03\"+\n\x08\x45vidence\x12\x0f\n\x07pub_key\x18\x01 \x01(\x0c\x12\x0e\n\x06height\x18\x02 \x01(\x03\x32\x8c\x05\n\x0f\x41\x42\x43IApplication\x12/\n\x04\x45\x63ho\x12\x12.types.RequestEcho\x1a\x13.types.ResponseEcho\x12\x32\n\x05\x46lush\x12\x13.types.RequestFlush\x1a\x14.types.ResponseFlush\x12/\n\x04Info\x12\x12.types.RequestInfo\x1a\x13.types.ResponseInfo\x12>\n\tSetOption\x12\x17.types.RequestSetOption\x1a\x18.types.ResponseSetOption\x12>\n\tDeliverTx\x12\x17.types.RequestDeliverTx\x1a\x18.types.ResponseDeliverTx\x12\x38\n\x07\x43heckTx\x12\x15.types.RequestCheckTx\x1a\x16.types.ResponseCheckTx\x12\x32\n\x05Query\x12\x13.types.RequestQuery\x1a\x14.types.ResponseQuery\x12\x35\n\x06\x43ommit\x12\x14.types.RequestCommit\x1a\x15.types.ResponseCommit\x12>\n\tInitChain\x12\x17.types.RequestInitChain\x1a\x18.types.ResponseInitChain\x12\x41\n\nBeginBlock\x12\x18.types.RequestBeginBlock\x1a\x19.types.ResponseBeginBlock\x12;\n\x08\x45ndBlock\x12\x16.types.RequestEndBlock\x1a\x17.types.ResponseEndBlockb\x06proto3')
   ,
   dependencies=[github_dot_com_dot_gogo_dot_protobuf_dot_gogoproto_dot_gogo__pb2.DESCRIPTOR,github_dot_com_dot_tendermint_dot_tmlibs_dot_common_dot_types__pb2.DESCRIPTOR,])
 
@@ -980,14 +980,21 @@ _RESPONSECHECKTX = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='tags', full_name='types.ResponseCheckTx.tags', index=5,
+      name='gas_used', full_name='types.ResponseCheckTx.gas_used', index=5,
+      number=6, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='tags', full_name='types.ResponseCheckTx.tags', index=6,
       number=7, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000\352\336\037\016tags,omitempty')), file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='fee', full_name='types.ResponseCheckTx.fee', index=6,
+      name='fee', full_name='types.ResponseCheckTx.fee', index=7,
       number=8, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -1006,7 +1013,7 @@ _RESPONSECHECKTX = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=2138,
-  serialized_end=2321,
+  serialized_end=2339,
 )
 
 
@@ -1066,6 +1073,13 @@ _RESPONSEDELIVERTX = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000\352\336\037\016tags,omitempty')), file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='fee', full_name='types.ResponseDeliverTx.fee', index=7,
+      number=8, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=_descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000')), file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1078,8 +1092,8 @@ _RESPONSEDELIVERTX = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2324,
-  serialized_end=2490,
+  serialized_start=2342,
+  serialized_end=2545,
 )
 
 
@@ -1116,8 +1130,8 @@ _RESPONSEENDBLOCK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2492,
-  serialized_end=2618,
+  serialized_start=2547,
+  serialized_end=2673,
 )
 
 
@@ -1147,8 +1161,8 @@ _RESPONSECOMMIT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2620,
-  serialized_end=2650,
+  serialized_start=2675,
+  serialized_end=2705,
 )
 
 
@@ -1192,8 +1206,8 @@ _CONSENSUSPARAMS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2653,
-  serialized_end=2782,
+  serialized_start=2708,
+  serialized_end=2837,
 )
 
 
@@ -1237,8 +1251,8 @@ _BLOCKSIZE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2784,
-  serialized_end=2848,
+  serialized_start=2839,
+  serialized_end=2903,
 )
 
 
@@ -1275,8 +1289,8 @@ _TXSIZE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2850,
-  serialized_end=2894,
+  serialized_start=2905,
+  serialized_end=2949,
 )
 
 
@@ -1306,8 +1320,8 @@ _BLOCKGOSSIP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2896,
-  serialized_end=2940,
+  serialized_start=2951,
+  serialized_end=2995,
 )
 
 
@@ -1393,8 +1407,8 @@ _HEADER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2943,
-  serialized_end=3177,
+  serialized_start=2998,
+  serialized_end=3232,
 )
 
 
@@ -1431,8 +1445,8 @@ _BLOCKID = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3179,
-  serialized_end=3245,
+  serialized_start=3234,
+  serialized_end=3300,
 )
 
 
@@ -1469,8 +1483,8 @@ _PARTSETHEADER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3247,
-  serialized_end=3291,
+  serialized_start=3302,
+  serialized_end=3346,
 )
 
 
@@ -1507,8 +1521,8 @@ _VALIDATOR = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3293,
-  serialized_end=3336,
+  serialized_start=3348,
+  serialized_end=3391,
 )
 
 
@@ -1545,8 +1559,8 @@ _EVIDENCE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=3338,
-  serialized_end=3381,
+  serialized_start=3393,
+  serialized_end=3436,
 )
 
 _REQUEST.fields_by_name['echo'].message_type = _REQUESTECHO
@@ -1647,6 +1661,7 @@ _RESPONSE.fields_by_name['commit'].containing_oneof = _RESPONSE.oneofs_by_name['
 _RESPONSECHECKTX.fields_by_name['tags'].message_type = github_dot_com_dot_tendermint_dot_tmlibs_dot_common_dot_types__pb2._KVPAIR
 _RESPONSECHECKTX.fields_by_name['fee'].message_type = github_dot_com_dot_tendermint_dot_tmlibs_dot_common_dot_types__pb2._KI64PAIR
 _RESPONSEDELIVERTX.fields_by_name['tags'].message_type = github_dot_com_dot_tendermint_dot_tmlibs_dot_common_dot_types__pb2._KVPAIR
+_RESPONSEDELIVERTX.fields_by_name['fee'].message_type = github_dot_com_dot_tendermint_dot_tmlibs_dot_common_dot_types__pb2._KI64PAIR
 _RESPONSEENDBLOCK.fields_by_name['validator_updates'].message_type = _VALIDATOR
 _RESPONSEENDBLOCK.fields_by_name['consensus_param_updates'].message_type = _CONSENSUSPARAMS
 _CONSENSUSPARAMS.fields_by_name['block_size'].message_type = _BLOCKSIZE
@@ -1941,6 +1956,8 @@ _RESPONSECHECKTX.fields_by_name['fee'].has_options = True
 _RESPONSECHECKTX.fields_by_name['fee']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _RESPONSEDELIVERTX.fields_by_name['tags'].has_options = True
 _RESPONSEDELIVERTX.fields_by_name['tags']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000\352\336\037\016tags,omitempty'))
+_RESPONSEDELIVERTX.fields_by_name['fee'].has_options = True
+_RESPONSEDELIVERTX.fields_by_name['fee']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _RESPONSEENDBLOCK.fields_by_name['validator_updates'].has_options = True
 _RESPONSEENDBLOCK.fields_by_name['validator_updates']._options = _descriptor._ParseOptions(descriptor_pb2.FieldOptions(), _b('\310\336\037\000'))
 _HEADER.fields_by_name['chain_id'].has_options = True
@@ -1956,8 +1973,8 @@ _ABCIAPPLICATION = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=3384,
-  serialized_end=4036,
+  serialized_start=3439,
+  serialized_end=4091,
   methods=[
   _descriptor.MethodDescriptor(
     name='Echo',
