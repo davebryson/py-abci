@@ -16,7 +16,7 @@ import gevent, signal
 from gevent.event import Event
 from gevent.server import StreamServer
 
-from .encoding import read_messages, write_message, NODATA, FRAGDATA, OK
+from .encoding import read_messages, write_message
 from .messages import *
 from .types_pb2 import Request
 from .utils import get_logger
@@ -156,7 +156,7 @@ class ABCIServer(object):
                 data = BytesIO()
                 last_pos = 0
 
-            inbound = socket.recv(1024 * 10) # 10KB
+            inbound = socket.recv(1024 * 8) # 8KB
             data.write(inbound)
 
             if not len(inbound):

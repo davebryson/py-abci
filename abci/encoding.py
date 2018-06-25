@@ -1,9 +1,5 @@
 from io import BytesIO
 
-# Codes
-NODATA = 1
-FRAGDATA = 2
-OK = 3
 
 def encode_varint(number):
     # Shift to int64
@@ -45,9 +41,8 @@ def write_message(message):
 
 
 def read_messages(reader, message):
-    """ read the message based on the varintself.
-    Returns: (value, code) based on results
-    """
+    """Return an interator of the messages found in
+    the `reader` (BytesIO instance)."""
 
     while True:
         try:
