@@ -8,14 +8,14 @@ def test_encoding_decoding():
     echo = to_request_echo('hello')
     raw = write_message(echo)
     buffer = BytesIO(raw)
-    req, _ = read_message(buffer, types.Request)
-    assert 'echo' == req.WhichOneof("value")
+    message = next(read_messages(buffer, types.Request))
+    assert 'echo' == message.WhichOneof("value")
 
     info = to_request_info()
     raw1 = write_message(info)
     buffer1 = BytesIO(raw1)
-    req1, _ = read_message(buffer1, types.Request)
-    assert 'info' == req1.WhichOneof("value")
+    message = next(read_messages(buffer1, types.Request))
+    assert 'info' == message.WhichOneof("value")
 
 def test_flow():
     from io import BytesIO
@@ -23,10 +23,10 @@ def test_flow():
     inbound = b'\x14"\x08\n\x060.16.0\x04\x1a\x00'
     data = BytesIO(inbound)
 
-    req_type,_  = read_message(data, types.Request)
-    assert 'info' == req_type.WhichOneof("value")
+    message = next(read_messages(data, types.Request))
+    assert 'info' == message.WhichOneof("value")
 
-    req_type2, _  = read_message(data, types.Request)
-    assert 'flush' == req_type2.WhichOneof("value")
+    message = next(read_messages(data, types.Request))
+    assert 'flush' == message.WhichOneof("value")
 
     assert data.read() == b''
