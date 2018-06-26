@@ -17,7 +17,7 @@ from abci.types_pb2 import (
     RequestBeginBlock, ResponseBeginBlock,
     RequestEndBlock, ResponseEndBlock,
     RequestCommit, ResponseCommit,
-    Validator,
+    Validator, PubKey
 )
 
 from abci.utils import str_to_bytes
@@ -92,7 +92,13 @@ def test_handler():
     assert resp.info.last_block_app_hash == b'0x12'
 
     # init_chain
-    v = [Validator(pub_key=b'a'), Validator(pub_key=b'b')]
+    val_a = Validator(address=b'addr_a', power=10,
+                      pub_key=PubKey(type='amino_encoded',
+                                     data=b'a_pub_key'))
+    val_b = Validator(address=b'addr_a', power=10,
+                      pub_key=PubKey(type='amino_encoded', data=b'b_pub_key'))
+
+    v = [val_a, val_b]
     req = Request(init_chain=RequestInitChain(validators=v))
     raw = p.process('init_chain', req)
     resp = __deserialze(raw)
@@ -133,7 +139,8 @@ def test_handler():
     resp = __deserialze(raw)
     assert resp.end_block.validator_updates
     assert len(resp.end_block.validator_updates) == 2
-    assert resp.end_block.validator_updates[0].pub_key == b'a'
+    assert resp.end_block.validator_updates[0].pub_key.data == b'a_pub_key'
+    assert resp.end_block.validator_updates[1].pub_key.data == b'b_pub_key'
 
     # Commit
     req = Request(commit=RequestCommit())

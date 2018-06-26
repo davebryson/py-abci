@@ -109,7 +109,7 @@ class ProtocolHandler:
 
 
 class ABCIServer:
-    def __init__(self, port=46658, app=None):
+    def __init__(self, port=26658, app=None):
         if not app or not isinstance(app, BaseApplication):
             log.error("Application missing or not an instance of Base Application")
             raise TypeError("Application missing or not an instance of Base Application")
