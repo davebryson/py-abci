@@ -10,21 +10,36 @@ connection.  If one crashes you will not have full connectivity to Tendermint
 """
 import sys
 import struct
+import signal
 from io import BytesIO
 
-import gevent, signal
+import gevent
 from gevent.event import Event
 from gevent.server import StreamServer
 
 from .encoding import read_messages, write_message
-from .messages import *
 from .types_pb2 import Request
 from .utils import get_logger
 from .application import BaseApplication
 
+from .types_pb2 import (
+    Request, Response, ResponseException,
+    RequestEcho, ResponseEcho,
+    RequestFlush, ResponseFlush,
+    RequestInitChain, ResponseInitChain,
+    RequestInfo, ResponseInfo,
+    RequestSetOption, ResponseSetOption,
+    ResponseDeliverTx,
+    ResponseCheckTx,
+    RequestQuery, ResponseQuery,
+    RequestBeginBlock, ResponseBeginBlock,
+    RequestEndBlock, ResponseEndBlock,
+    ResponseCommit,
+)
+
 log = get_logger()
 
-class ProtocolHandler(object):
+class ProtocolHandler:
     """ Internal handler called by the server to process requests from
     Tendermint.  The handler delegates call to your application"""
     def __init__(self, app):
@@ -35,81 +50,65 @@ class ProtocolHandler(object):
         return handler(req)
 
     def echo(self, req):
-        return write_message(to_response_echo(req.echo.message))
+        msg = req.echo.message
+        response = Response(echo=ResponseEcho(message=msg))
+        return write_message(response)
 
     def flush(self, req):
-        flush_resp = to_response_flush()
-        return write_message(to_response_flush())
+        response = Response(flush=ResponseFlush())
+        return write_message(response)
 
     def info(self, req):
-        result = self.app.info()
-        response = to_response_info(result)
+        result = self.app.info(req.info)
+        response = Response(info=result)
         return write_message(response)
 
     def set_option(self, req):
-        result = self.app.set_option(req.set_option.key,req.set_option.value)
-        response = to_response_set_option(result)
+        result = self.app.set_option(req.set_option)
+        response = Response(set_option=result)
         return write_message(response)
 
     def check_tx(self, req):
         result = self.app.check_tx(req.check_tx.tx)
-        response = to_response_check_tx(result.code, result.data, result.log)
+        response = Response(check_tx=result)
         return write_message(response)
 
     def deliver_tx(self, req):
         result = self.app.deliver_tx(req.deliver_tx.tx)
-        response = to_response_deliver_tx(result.code, result.data, result.log)
+        response = Response(deliver_tx=result)
         return write_message(response)
 
     def query(self, req):
         result = self.app.query(req.query)
-        response = to_response_query(result)
+        response = Response(query=result)
         return write_message(response)
 
     def commit(self, req):
         result = self.app.commit()
-        response = to_response_commit(result)
+        response = Response(commit=result)
         return write_message(response)
 
     def begin_block(self, req):
-        self.app.begin_block(req.begin_block)
-        return write_message(to_response_begin_block())
+        result = self.app.begin_block(req.begin_block)
+        response = Response(begin_block=result)
+        return write_message(response)
 
     def end_block(self, req):
-        result = self.app.end_block(req.end_block.height)
-        return write_message(to_response_end_block(result))
+        result = self.app.end_block(req.end_block)
+        response = Response(end_block=result)
+        return write_message(response)
 
-    def init_chain(self, validators):
-        self.app.init_chain(validators)
-        return write_message(to_response_init_chain())
+    def init_chain(self, req):
+        result = self.app.init_chain(req.init_chain)
+        response = Response(init_chain=result)
+        return write_message(response)
 
     def no_match(self, req):
-        response = to_response_exception("Unknown request!")
+        response = Response(exception=ResponseException(error="ABCI request not found"))
         return write_message(response)
 
 
-def decode_varint(value):
-    vbyte = 0
-    while True:
-       vbyte, = struct.unpack('b', value)
-       if not vbyte & 0x80:
-           break
-    # from int64
-    vbyte >>= 1
-    return vbyte
-
-def read_varint_stream(sock):
-    sz = decode_varint(sock.recv(1))
-    data = b''
-    while sz:
-        buf = sock.recv(sz)
-        if not buf:
-            raise ValueError("Buffer receive truncated")
-        data += buf
-        sz -= len(buf)
-    return data
-
-class ABCIServer(object):
+class ABCIServer:
     def __init__(self, port=46658, app=None):
         if not app or not isinstance(app, BaseApplication):
             log.error("Application missing or not an instance of Base Application")
@@ -156,7 +155,7 @@ class ABCIServer(object):
                 data = BytesIO()
                 last_pos = 0
 
-            inbound = socket.recv(1024 * 8) # 8KB
+            inbound = socket.recv(1024 * 8)  # 8KB
             data.write(inbound)
 
             if not len(inbound):

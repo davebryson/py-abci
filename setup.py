@@ -12,7 +12,7 @@ with open(path.join(DIR, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='bigchaindb-abci',
-    version='0.4.5',
+    version='0.5.0',
     description='Python based ABCI Server for Tendermint',
     long_description=long_description,
     url='https://github.com/kansi/py-abci',

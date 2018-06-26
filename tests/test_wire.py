@@ -1,32 +1,44 @@
-from abci.encoding import *
-from abci.messages import *
-from abci.server import ProtocolHandler
-import abci.types_pb2 as types
+from io import BytesIO
+
+from abci.encoding import (
+    write_message,
+    read_messages,
+)
 
 
-def test_encoding_decoding():
-    echo = to_request_echo('hello')
-    raw = write_message(echo)
-    buffer = BytesIO(raw)
-    message = next(read_messages(buffer, types.Request))
-    assert 'echo' == message.WhichOneof("value")
+from abci.types_pb2 import (
+    Request,
+    RequestEcho,
+    RequestInfo,
+)
 
-    info = to_request_info()
-    raw1 = write_message(info)
-    buffer1 = BytesIO(raw1)
-    message = next(read_messages(buffer1, types.Request))
-    assert 'info' == message.WhichOneof("value")
 
-def test_flow():
+def test_raw_decoding():
+
     from io import BytesIO
-    # info + flush
+    # info + flush request
     inbound = b'\x14"\x08\n\x060.16.0\x04\x1a\x00'
     data = BytesIO(inbound)
 
-    message = next(read_messages(data, types.Request))
-    assert 'info' == message.WhichOneof("value")
+    req_type = next(read_messages(data, Request))
+    assert 'info' == req_type.WhichOneof("value")
 
-    message = next(read_messages(data, types.Request))
-    assert 'flush' == message.WhichOneof("value")
+    req_type2 = next(read_messages(data, Request))
+    assert 'flush' == req_type2.WhichOneof("value")
 
     assert data.read() == b''
+
+
+def test_encoding_decoding():
+    echo = Request(echo=RequestEcho(message="hello"))
+    #echo = to_request_echo('hello')
+    raw = write_message(echo)
+    buffer = BytesIO(raw)
+    req = next(read_messages(buffer, Request))
+    assert 'echo' == req.WhichOneof("value")
+
+    info = Request(info=RequestInfo(version="18.0"))
+    raw1 = write_message(info)
+    buffer1 = BytesIO(raw1)
+    req = next(read_messages(buffer1, Request))
+    assert 'info' == req.WhichOneof("value")
