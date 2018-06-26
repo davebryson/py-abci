@@ -2,7 +2,7 @@ from io import BytesIO
 
 from abci.server import ProtocolHandler
 from abci.application import BaseApplication, CodeTypeOk
-from abci.encoding import read_message, write_message
+from abci.encoding import read_messages, write_message
 
 from abci.types_pb2 import (
     Request, Response, ResponseException,
@@ -62,8 +62,9 @@ class ExampleApp(BaseApplication):
 
 
 def __deserialze(raw: bytes) -> Request:
-    resp, _ = read_message(BytesIO(raw), Response)
+    resp = next(read_messages(BytesIO(raw), Response))
     return resp
+
 
 def test_handler():
     app = ExampleApp()

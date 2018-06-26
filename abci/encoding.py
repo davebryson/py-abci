@@ -1,9 +1,5 @@
 from io import BytesIO
 
-# Codes
-NODATA = 1
-FRAGDATA = 2
-OK = 3
 
 def encode_varint(number):
     # Shift to int64
@@ -43,21 +39,23 @@ def write_message(message):
     buffer.write(bz)
     return buffer.getvalue()
 
-def read_message(reader, message):
-    """ read the message based on the varintself.
-    Returns: (value, code) based on results
-    """
-    current_position = reader.tell()
-    len64 = decode_varint(reader)
-    length = len64 >> 1
-    slice = reader.read(length)
 
-    if len(slice) == 0:
-        return None, NODATA
+def read_messages(reader, message):
+    """Return an interator of the messages found in
+    the `reader` (BytesIO instance)."""
 
-    if len(slice) < length:
-        return current_position, FRAGDATA
+    while True:
+        try:
+            length = decode_varint(reader) >> 1
+        except EOFError:
+            return
 
-    m = message()
-    m.ParseFromString(slice)
-    return m, OK
+        data = reader.read(length)
+
+        if len(data) < length:
+            return
+
+        m = message()
+        m.ParseFromString(data)
+
+        yield m
