@@ -17,14 +17,8 @@ import gevent
 from gevent.event import Event
 from gevent.server import StreamServer
 
-from .encoding import (
-    read_message,
-    write_message,
-    NODATA,
-    FRAGDATA,
-    OK,
-)
-
+from .encoding import read_messages, write_message
+from .types_pb2 import Request
 from .utils import get_logger
 from .application import BaseApplication
 
@@ -115,7 +109,7 @@ class ProtocolHandler:
 
 
 class ABCIServer:
-    def __init__(self, port=46658, app=None):
+    def __init__(self, port=26658, app=None):
         if not app or not isinstance(app, BaseApplication):
             log.error("Application missing or not an instance of Base Application")
             raise TypeError("Application missing or not an instance of Base Application")
@@ -152,30 +146,30 @@ class ABCIServer:
     def __handle_connection(self, socket, address):
         log.info(' ... connection from Tendermint: {}:{} ...'.format(address[0], address[1]))
         data = BytesIO()
-        carry_forward = b''
+        last_pos = 0
+
         while True:
-            inbound = socket.recv(1024)
-            msg_length = len(carry_forward) + len(inbound)
-            data.write(carry_forward)
+            # Create a new buffer every time there is the possibility.
+            # This avoids having a never ending buffer.
+            if last_pos == data.tell():
+                data = BytesIO()
+                last_pos = 0
+
+            inbound = socket.recv(1024 * 8)  # 8KB
             data.write(inbound)
 
-            data.seek(0)
-            carry_forward = b''
-            if not data or msg_length == 0: return
-            try:
-                while data.tell() < msg_length:
-                    result, code  = read_message(data, Request)
-                    if code == NODATA: return
-                    if code == FRAGDATA:
-                        data.seek(result)
-                        carry_forward = data.read(1024)
-                        break
-                    req_type = result.WhichOneof("value")
-                    response = self.protocol.process(req_type, result)
-                    socket.send(response)
-            except:
-                log.error(" Server Error: {}".format(sys.exc_info()[1]))
+            if not len(inbound):
+                break
 
-            data.seek(0)
-            data.truncate()
+            # Before reading the messages from the buffer, position the
+            # cursor at the end of the last read message.
+            data.seek(last_pos)
+            messages = read_messages(data, Request)
+
+            for message in messages:
+                req_type = message.WhichOneof('value')
+                response = self.protocol.process(req_type, message)
+                socket.send(response)
+                last_pos = data.tell()
+
         socket.close()
