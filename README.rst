@@ -11,7 +11,7 @@ Build blockchain applications in Python for Tendermint
 
 Version
 -------
-Supports ABCI v0.10.3 and latest Tendermint
+Supports ABCI v0.12.0 and latest Tendermint
 
 Installation
 ------------
