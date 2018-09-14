@@ -8,8 +8,7 @@ Tendermint connects to this server over 3 different connections:
 This can be a bit confusing in the app since gevent spawns a greenlet for each
 connection.  If one crashes you will not have full connectivity to Tendermint
 """
-import sys
-import struct
+
 import signal
 from io import BytesIO
 
@@ -18,7 +17,6 @@ from gevent.event import Event
 from gevent.server import StreamServer
 
 from .encoding import read_messages, write_message
-from .types_pb2 import Request
 from .utils import get_logger
 from .application import BaseApplication
 
@@ -39,13 +37,15 @@ from .types_pb2 import (
 
 log = get_logger()
 
+
 class ProtocolHandler:
     """ Internal handler called by the server to process requests from
     Tendermint.  The handler delegates call to your application"""
+
     def __init__(self, app):
         self.app = app
 
-    def process(self,req_type, req):
+    def process(self, req_type, req):
         handler = getattr(self, req_type, self.no_match)
         return handler(req)
 
