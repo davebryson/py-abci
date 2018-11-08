@@ -20,7 +20,7 @@ from .encoding import read_messages, write_message
 from .utils import get_logger
 from .application import BaseApplication
 
-from .types_pb2 import (
+from github.com.tendermint.tendermint.abci.types.types_pb2 import (
     Request, Response, ResponseException,
     RequestEcho, ResponseEcho,
     RequestFlush, ResponseFlush,
@@ -104,18 +104,22 @@ class ProtocolHandler:
         return write_message(response)
 
     def no_match(self, req):
-        response = Response(exception=ResponseException(error="ABCI request not found"))
+        response = Response(exception=ResponseException(
+            error="ABCI request not found"))
         return write_message(response)
 
 
 class ABCIServer:
     def __init__(self, port=26658, app=None):
         if not app or not isinstance(app, BaseApplication):
-            log.error("Application missing or not an instance of Base Application")
-            raise TypeError("Application missing or not an instance of Base Application")
+            log.error(
+                "Application missing or not an instance of Base Application")
+            raise TypeError(
+                "Application missing or not an instance of Base Application")
         self.port = port
         self.protocol = ProtocolHandler(app)
-        self.server = StreamServer(('0.0.0.0', port), handle=self.__handle_connection)
+        self.server = StreamServer(
+            ('0.0.0.0', port), handle=self.__handle_connection)
 
     def start(self):
         self.server.start()
@@ -144,7 +148,8 @@ class ABCIServer:
     # If an error happens in 1 it still leaves the others open which
     # means you don't have all the connections available to TM
     def __handle_connection(self, socket, address):
-        log.info(' ... connection from Tendermint: {}:{} ...'.format(address[0], address[1]))
+        log.info(' ... connection from Tendermint: {}:{} ...'.format(
+            address[0], address[1]))
         data = BytesIO()
         last_pos = 0
 

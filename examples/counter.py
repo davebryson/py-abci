@@ -9,11 +9,11 @@ To run it:
 - start this server: python counter.py
 - start tendermint: tendermint --home "YOUR DIR HERE" node
 - The send transactions to the app:
-curl http://localhost:46657/broadcast_tx_commit?tx=0x01
-curl http://localhost:46657/broadcast_tx_commit?tx=0x02
+curl http://localhost:26657/broadcast_tx_commit?tx=0x01
+curl http://localhost:26657/broadcast_tx_commit?tx=0x02
 ...
 to see the latest count:
-curl http://localhost:46657/abci_query
+curl http://localhost:26657/abci_query
 
 The way the app state is structured, you can also see the current state value
 in the tendermint console output.
@@ -33,11 +33,15 @@ from abci import (
 )
 
 # Tx encoding/decoding
+
+
 def encode_number(value):
     return struct.pack('>I', value)
 
+
 def decode_number(raw):
     return int.from_bytes(raw, byteorder='big')
+
 
 class SimpleCounter(BaseApplication):
 

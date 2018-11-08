@@ -4,7 +4,7 @@ from abci.server import ProtocolHandler
 from abci.application import BaseApplication, CodeTypeOk
 from abci.encoding import read_messages, write_message
 
-from abci.types_pb2 import (
+from github.com.tendermint.tendermint.abci.types.types_pb2 import (
     Request, Response, ResponseException,
     RequestEcho, ResponseEcho,
     RequestFlush, ResponseFlush,
@@ -22,6 +22,7 @@ from abci.types_pb2 import (
 
 from abci.utils import str_to_bytes
 
+
 class ExampleApp(BaseApplication):
 
     def __init__(self):
@@ -29,7 +30,8 @@ class ExampleApp(BaseApplication):
 
     def info(self, req):
         v = req.version
-        r = ResponseInfo(version=v, data="hello", last_block_height=0, last_block_app_hash=b'0x12')
+        r = ResponseInfo(version=v, data="hello",
+                         last_block_height=0, last_block_app_hash=b'0x12')
         return r
 
     def init_chain(self, req):
@@ -94,10 +96,10 @@ def test_handler():
     # init_chain
     val_a = ValidatorUpdate(power=10,
                             pub_key=PubKey(type='amino_encoded',
-                            data=b'a_pub_key'))
+                                           data=b'a_pub_key'))
     val_b = ValidatorUpdate(power=10,
                             pub_key=PubKey(type='amino_encoded',
-                            data=b'b_pub_key'))
+                                           data=b'b_pub_key'))
 
     v = [val_a, val_b]
     req = Request(init_chain=RequestInitChain(validators=v))

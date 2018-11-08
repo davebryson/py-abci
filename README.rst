@@ -11,7 +11,7 @@ Build blockchain applications in Python for Tendermint
 
 Version
 -------
-Supports ABCI v0.12.0 and latest Tendermint
+Supports: ABCI v0.15.0 and Tendermint v0.26.0
 
 Installation
 ------------
@@ -21,13 +21,18 @@ Requires Python >= 3.6.5
 
 Generating Protobuf
 -------------------
-*ONLY* needed for developing this code base, not to create apps.  If you
-just want to create apps, goto Getting Started
+You *ONLY* need to mess with the protobuf stuff if you're developing on this code base, not to create apps.  
+If you just want to create apps, jump to ``Getting Started``
 
-1. Install protoc
-2. Install go
-3. Install gogo protobuf via go
-4. Run `make gogo`
+A note on protobuf.  You'll notice 2 additional directories: ``github`` and ``protobuf``.
+The ``github`` dir is the protobuf generated code used by ``abci``. It adds proper Python 
+path (via __init___) and preserves all the import statements used by Tendermint for the various 
+protobuf files spread across their codebase.  The ``protobuf`` directory is the 
+source .proto files.
+
+To build the protobuf files:
+1. Install protoc so it's available as a command from a terminal
+2. Run the `genproto.py` script
 
 
 Getting Started

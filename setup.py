@@ -12,7 +12,7 @@ with open(path.join(DIR, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='abci',
-    version='0.5.1',
+    version='0.6.0',
     description='Python based ABCI Server for Tendermint',
     long_description=long_description,
     url='https://github.com/davebryson/py-abci',
@@ -27,12 +27,12 @@ setup(
     keywords='blockchain tendermint abci',
     packages=find_packages(exclude=['tests']),
     install_requires=[
-        "protobuf>=3.5.2.post1",
-        "gevent>=1.3a2",
-        "colorlog>=3.1.2",
-        "pytest>=3.5.0",
-        "pytest-pythonpath>=0.7.2",
-        "pytest-cov>=2.5.1"
+        "protobuf>=3.6.1",
+        "gevent>=1.3.7",
+        "colorlog>=3.1.4",
+        "pytest>=3.10.0",
+        "pytest-pythonpath>=0.7.3",
+        "pytest-cov>=2.6.0"
     ],
     python_requires='>=3.6',
 )

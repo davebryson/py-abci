@@ -1,6 +1,6 @@
 
 from .utils import str_to_bytes
-from .types_pb2 import (
+from github.com.tendermint.tendermint.abci.types.types_pb2 import (
     RequestInitChain, ResponseInitChain,
     RequestInfo, ResponseInfo,
     RequestSetOption, ResponseSetOption,
@@ -13,6 +13,7 @@ from .types_pb2 import (
 )
 
 CodeTypeOk = 0
+
 
 class BaseApplication:
     """
