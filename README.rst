@@ -31,6 +31,7 @@ protobuf files spread across their codebase.  The ``protobuf`` directory is the
 source .proto files.
 
 To build the protobuf files:
+
 1. Install protoc so it's available as a command from a terminal
 2. Run the `genproto.py` script
 
