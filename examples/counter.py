@@ -6,7 +6,8 @@ state maintains the current count. For example if starting at state 0, sending:
 
 To run it:
 - make a clean new directory for tendermint
-- start this server: python counter.py
+- start this server: python counter.py -p [application port]
+- port defaults to abci library default if not provided
 - start tendermint: tendermint --home "YOUR DIR HERE" node
 - The send transactions to the app:
 curl http://localhost:26657/broadcast_tx_commit?tx=0x01
@@ -20,6 +21,7 @@ in the tendermint console output.
 """
 import struct
 import abci.utils as util
+import argparse
 
 from abci import (
     ABCIServer,
@@ -92,7 +94,14 @@ class SimpleCounter(BaseApplication):
 
 
 if __name__ == '__main__':
+    # Define argparse argument for changing proxy app port
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', type=int, help='Proxy app port')
+    args = parser.parse_args()
     # Create the app
-    app = ABCIServer(app=SimpleCounter())
+    if args.p is None:
+        app = ABCIServer(app=SimpleCounter())   # defaults to default port if -p not provided
+    else:
+        app = ABCIServer(app=SimpleCounter(), port=args.p)
     # Run it
     app.run()
