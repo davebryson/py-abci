@@ -34,6 +34,7 @@ clean:
 build-dist:
 	python setup.py sdist
 
+# install twine with pipenv install -d
 test-pypi:
 	twine upload dist/* --repository testpypi
 

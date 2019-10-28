@@ -14,7 +14,7 @@ setup(
     name='abci',
     version='0.6.1',
     description='Python based ABCI Server for Tendermint',
-    long_description=long_description,
+    long_description='Python based ABCI Server for Tendermint',
     url='https://github.com/davebryson/py-abci',
     author='Dave Bryson',
     license='Apache 2.0',
