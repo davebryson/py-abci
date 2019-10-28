@@ -7,11 +7,13 @@
 .. image:: https://img.shields.io/pypi/v/abci.svg
   :target: https://pypi.python.org/pypi/abci
 
-Build blockchain applications in Python for Tendermint
+Py-ABCI
+-------
+Build Tendermint blockchain applications in Python
 
 Version
 -------
-Supports: ABCI v0.15.0 and Tendermint v0.26.0
+Supports: ABCI *0.16.1* and Tendermint *0.32.6*
 
 Installation
 ------------
@@ -19,9 +21,9 @@ Requires Python >= 3.6.5
 
 ``pip install abci``  OR ``python setup.py install``
 
-Generating Protobuf
+Re-generating Protobuf
 -------------------
-You *ONLY* need to mess with the protobuf stuff if you're developing on this code base, not to create apps.  
+You *ONLY* need to re-generate the protobuf files if you're developing on this code base, not to create apps.  
 If you just want to create apps, jump to ``Getting Started``
 
 A note on protobuf.  You'll notice 2 additional directories: ``github`` and ``protobuf``.
@@ -33,7 +35,7 @@ source .proto files.
 To build the protobuf files:
 
 1. Install protoc so it's available as a command from a terminal
-2. Run the `genproto.py` script
+2. Run `make update-proto`
 
 
 Getting Started
