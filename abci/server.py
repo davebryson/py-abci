@@ -136,9 +136,9 @@ class ABCIServer:
 
         # wait for interrupt
         evt = Event()
-        gevent.signal(signal.SIGQUIT, evt.set)
-        gevent.signal(signal.SIGTERM, evt.set)
-        gevent.signal(signal.SIGINT, evt.set)
+        gevent.signal_handler(signal.SIGQUIT, evt.set)
+        gevent.signal_handler(signal.SIGTERM, evt.set)
+        gevent.signal_handler(signal.SIGINT, evt.set)
         evt.wait()
 
         log.info("Shutting down server")
