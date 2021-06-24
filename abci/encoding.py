@@ -4,9 +4,9 @@ from io import BytesIO
 def encode_varint(number):
     # Shift to int64
     number = number << 1
-    buf = b''
+    buf = b""
     while True:
-        towrite = number & 0x7f
+        towrite = number & 0x7F
         number >>= 7
         if number:
             buf += bytes((towrite | 0x80,))
@@ -15,25 +15,28 @@ def encode_varint(number):
             break
     return buf
 
+
 def decode_varint(stream):
     shift = 0
     result = 0
     while True:
         i = _read_one(stream)
-        result |= (i & 0x7f) << shift
+        result |= (i & 0x7F) << shift
         shift += 7
         if not (i & 0x80):
             break
     return result
 
+
 def _read_one(stream):
     c = stream.read(1)
-    if c == b'':
+    if c == b"":
         raise EOFError("Unexpected EOF while reading bytes")
     return ord(c)
 
+
 def write_message(message):
-    buffer = BytesIO(b'')
+    buffer = BytesIO(b"")
     bz = message.SerializeToString()
     buffer.write(encode_varint(len(bz)))
     buffer.write(bz)

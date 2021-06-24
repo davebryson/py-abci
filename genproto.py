@@ -9,8 +9,8 @@ import sys
 from distutils.spawn import find_executable
 
 
-if 'PROTOC' in os.environ and os.path.exists(os.environ['PROTOC']):
-    protoc = os.environ['PROTOC']
+if "PROTOC" in os.environ and os.path.exists(os.environ["PROTOC"]):
+    protoc = os.environ["PROTOC"]
 elif os.path.exists("../src/protoc"):
     protoc = "../src/protoc"
 elif os.path.exists("../src/protoc.exe"):
@@ -31,11 +31,11 @@ def generate_proto(source, require=True):
     if not require and not os.path.exists(source):
         return
 
-    output = source.replace(".proto", "_pb2.py").replace("./protobuf/", "")
+    output = source.replace(".proto", "_pb2.py").replace("./protobuf/", ".")
 
-    if (not os.path.exists(output) or
-        (os.path.exists(source) and
-         os.path.getmtime(source) > os.path.getmtime(output))):
+    if not os.path.exists(output) or (
+        os.path.exists(source) and os.path.getmtime(source) > os.path.getmtime(output)
+    ):
         print("Generating %s..." % output)
 
         if not os.path.exists(source):
@@ -43,23 +43,21 @@ def generate_proto(source, require=True):
             sys.exit(-1)
 
         if protoc is None:
-            sys.stderr.write(
-                "protoc is not installed\n")
+            sys.stderr.write("protoc is not installed\n")
             sys.exit(-1)
 
-        protoc_command = [protoc, "-I./protobuf",
-                          "-I.", "--python_out=.", source]
+        protoc_command = [protoc, "-I./protobuf", "-I.", "--python_out=.", source]
         if subprocess.call(protoc_command) != 0:
             sys.exit(-1)
 
 
-if __name__ == '__main__':
-    # Build all the protobuf files and put into the 'github' directory
-
-    generate_proto("./protobuf/github.com/gogo/protobuf/gogoproto/gogo.proto")
-    generate_proto(
-        "./protobuf/github.com/tendermint/tendermint/crypto/merkle/merkle.proto")
-    generate_proto(
-        "./protobuf/github.com/tendermint/tendermint/libs/common/types.proto")
-    generate_proto(
-        "./protobuf/github.com/tendermint/tendermint/abci/types/types.proto")
+if __name__ == "__main__":
+    # Build all the protobuf files and put into their directory
+    generate_proto("./protobuf/gogoproto/gogo.proto")
+    generate_proto("./protobuf/tendermint/crypto/keys.proto")
+    generate_proto("./protobuf/tendermint/crypto/proof.proto")
+    generate_proto("./protobuf/tendermint/types/params.proto")
+    generate_proto("./protobuf/tendermint/types/types.proto")
+    generate_proto("./protobuf/tendermint/types/validator.proto")
+    generate_proto("./protobuf/tendermint/version/types.proto")
+    generate_proto("./protobuf/tendermint/abci/types.proto")

@@ -1,18 +1,26 @@
 # Origin
-version_branch = v0.32.6
+version_branch = v0.34.11
 tendermint = https://raw.githubusercontent.com/tendermint/tendermint/$(version_branch)
 
 # Outputs
-tmkv = protobuf/github.com/tendermint/tendermint/libs/common/types.proto
-tmmerkle = protobuf/github.com/tendermint/tendermint/crypto/merkle/merkle.proto
-tmabci = protobuf/github.com/tendermint/tendermint/abci/types/types.proto
+tmabci = protobuf/tendermint/abci/types.proto
+tmpubkey = protobuf/tendermint/crypto/keys.proto
+tmproof =  protobuf/tendermint/crypto/proof.proto
+tmparams = protobuf/tendermint/types/params.proto
+tmtypes =  protobuf/tendermint/types/types.proto
+tmvalidator = protobuf/tendermint/types/validator.proto
+tmversions =  protobuf/tendermint/version/types.proto
 
 # You *only* need to run this to rebuild protobufs from the tendermint source
 update-proto:
-	curl $(tendermint)/abci/types/types.proto > $(tmabci)
-	curl $(tendermint)/libs/common/types.proto > $(tmkv)
-	curl $(tendermint)/crypto/merkle/merkle.proto > $(tmmerkle)
-	curl $(tendermint)/version/version.go | grep -F -eTMCoreSem -eABCISemVer > version.txt
+	curl $(tendermint)/proto/tendermint/abci/types.proto > $(tmabci)
+	curl $(tendermint)/proto/tendermint/crypto/keys.proto > $(tmpubkey)
+	curl $(tendermint)/proto/tendermint/crypto/proof.proto > $(tmproof)
+	curl $(tendermint)/proto/tendermint/types/params.proto > $(tmparams)
+	curl $(tendermint)/proto/tendermint/types/types.proto > $(tmtypes)
+	curl $(tendermint)/proto/tendermint/types/validator.proto > $(tmvalidator)
+	curl $(tendermint)/proto/tendermint/version/types.proto > $(tmversions)
+	curl $(tendermint)/version/version.go | grep -F -eTMVersionDefault -eABCISemVer > version.txt
 	python genproto.py
 
 test_tm:

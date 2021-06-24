@@ -1,14 +1,55 @@
+"""
+Base Application
 
-from .utils import str_to_bytes
-from github.com.tendermint.tendermint.abci.types.types_pb2 import (
-    RequestInitChain, ResponseInitChain,
-    RequestInfo, ResponseInfo,
-    RequestSetOption, ResponseSetOption,
+Note:
+Tendermint creates 4 connections to the application below through the 
+server.  Each connection belongs to certain functions.  Tendermint automatically
+handles synchronization of these calls - they are linearlized by tendermint.
+
+The connections:
+Query connection:
+- info()
+- query()
+
+Mempool connection:
+- check_tx()
+
+Consensus connection:
+- init_chain()
+- begin_block()
+- deliver_tx()
+- end_block()
+- commit()
+
+State Sync connection:
+- list_snapshots()
+- offer_snapshots()
+- load_snapshot_chunks()
+- apply_snapshot_chunks()
+"""
+
+# from .utils import str_to_bytes
+from tendermint.abci.types_pb2 import (
+    RequestApplySnapshotChunk,
+    RequestInitChain,
+    RequestListSnapshots,
+    RequestLoadSnapshotChunk,
+    RequestOfferSnapshot,
+    ResponseApplySnapshotChunk,
+    ResponseInitChain,
+    RequestInfo,
+    ResponseInfo,
     ResponseDeliverTx,
     ResponseCheckTx,
-    RequestQuery, ResponseQuery,
-    RequestBeginBlock, ResponseBeginBlock,
-    RequestEndBlock, ResponseEndBlock,
+    RequestQuery,
+    ResponseListSnapshots,
+    ResponseLoadSnapshotChunk,
+    ResponseOfferSnapshot,
+    ResponseQuery,
+    RequestBeginBlock,
+    ResponseBeginBlock,
+    RequestEndBlock,
+    ResponseEndBlock,
     ResponseCommit,
 )
 
@@ -37,12 +78,8 @@ class BaseApplication:
         """
         r = ResponseInfo()
         r.last_block_height = 0
-        r.last_block_app_hash = b''
+        r.last_block_app_hash = b""
         return r
-
-    def set_option(self, req: RequestSetOption) -> ResponseSetOption:
-        """Can be used to set key value pairs in storage.  Not always used"""
-        return ResponseSetOption()
 
     def deliver_tx(self, tx: bytes) -> ResponseDeliverTx:
         """
@@ -90,3 +127,31 @@ class BaseApplication:
         data is used as part of the consensus process.
         """
         return ResponseCommit()
+
+    def list_snapshots(self, req: RequestListSnapshots) -> ResponseListSnapshots:
+        """
+        State sync: return state snapshots
+        """
+        return ResponseListSnapshots()
+
+    def offer_snapshot(self, req: RequestOfferSnapshot) -> ResponseOfferSnapshot:
+        """
+        State sync: Offer a snapshot to the application
+        """
+        return ResponseOfferSnapshot()
+
+    def load_snapshot_chunk(
+        self, req: RequestLoadSnapshotChunk
+    ) -> ResponseLoadSnapshotChunk:
+        """
+        State sync: Load a snapshot
+        """
+        return ResponseLoadSnapshotChunk()
+
+    def apply_snapshot_chunk(
+        self, req: RequestApplySnapshotChunk
+    ) -> ResponseApplySnapshotChunk:
+        """
+        State sync: Apply a snapshot to state
+        """
+        return ResponseApplySnapshotChunk()
