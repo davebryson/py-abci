@@ -12,7 +12,7 @@ with open(path.join(DIR, "README.rst"), encoding="utf-8") as f:
 
 setup(
     name="abci",
-    version="0.7.0",
+    version="0.7.1",
     description="Python based ABCI Server for Tendermint",
     long_description="Build Tendermint blockchain applications in Python",
     url="https://github.com/davebryson/py-abci",

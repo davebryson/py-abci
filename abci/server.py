@@ -144,7 +144,8 @@ class ABCIServer:
 
         # wait for interrupt
         evt = Event()
-        gevent.signal_handler(signal.SIGQUIT, evt.set)
+        # Removed: no windows support
+        # gevent.signal_handler(signal.SIGQUIT, evt.set)
         gevent.signal_handler(signal.SIGTERM, evt.set)
         gevent.signal_handler(signal.SIGINT, evt.set)
         evt.wait()

@@ -28,7 +28,8 @@ from abci import (
     BaseApplication,
     ResponseInfo,
     ResponseInitChain,
-    ResponseCheckTx, ResponseDeliverTx,
+    ResponseCheckTx,
+    ResponseDeliverTx,
     ResponseQuery,
     ResponseCommit,
     CodeTypeOk,
@@ -38,15 +39,14 @@ from abci import (
 
 
 def encode_number(value):
-    return struct.pack('>I', value)
+    return struct.pack(">I", value)
 
 
 def decode_number(raw):
-    return int.from_bytes(raw, byteorder='big')
+    return int.from_bytes(raw, byteorder="big")
 
 
 class SimpleCounter(BaseApplication):
-
     def info(self, req) -> ResponseInfo:
         """
         Since this will always respond with height=0, Tendermint
@@ -55,7 +55,7 @@ class SimpleCounter(BaseApplication):
         r = ResponseInfo()
         r.version = "1.0"
         r.last_block_height = 0
-        r.last_block_app_hash = b''
+        r.last_block_app_hash = b""
         return r
 
     def init_chain(self, req) -> ResponseInitChain:
@@ -89,18 +89,20 @@ class SimpleCounter(BaseApplication):
 
     def commit(self) -> ResponseCommit:
         """Return the current encode state value to tendermint"""
-        hash = struct.pack('>Q', self.txCount)
+        hash = struct.pack(">Q", self.txCount)
         return ResponseCommit(data=hash)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Define argparse argument for changing proxy app port
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', type=int, help='Proxy app port')
+    parser.add_argument("-p", type=int, help="Proxy app port")
     args = parser.parse_args()
     # Create the app
     if args.p is None:
-        app = ABCIServer(app=SimpleCounter())   # defaults to default port if -p not provided
+        app = ABCIServer(
+            app=SimpleCounter()
+        )  # defaults to default port if -p not provided
     else:
         app = ABCIServer(app=SimpleCounter(), port=args.p)
     # Run it

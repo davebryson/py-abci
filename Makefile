@@ -28,6 +28,9 @@ test_tm:
 	tendermint --home .test_pyabci init
 	tendermint --home .test_pyabci node
 
+test:
+	pytest .
+
 dev-install:
 	pip install --editable .
 
