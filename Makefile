@@ -3,13 +3,13 @@ version_branch = v0.34.11
 tendermint = https://raw.githubusercontent.com/tendermint/tendermint/$(version_branch)
 
 # Outputs
-tmabci = protobuf/tendermint/abci/types.proto
-tmpubkey = protobuf/tendermint/crypto/keys.proto
-tmproof =  protobuf/tendermint/crypto/proof.proto
-tmparams = protobuf/tendermint/types/params.proto
-tmtypes =  protobuf/tendermint/types/types.proto
-tmvalidator = protobuf/tendermint/types/validator.proto
-tmversions =  protobuf/tendermint/version/types.proto
+tmabci = protos/tendermint/abci/types.proto
+tmtypes =  protos/tendermint/types/types.proto
+tmpubkey = protos/tendermint/crypto/keys.proto
+tmproof =  protos/tendermint/crypto/proof.proto
+tmparams = protos/tendermint/types/params.proto
+tmversions =  protos/tendermint/version/types.proto
+tmvalidator = protos/tendermint/types/validator.proto
 
 # You *only* need to run this to rebuild protobufs from the tendermint source
 update-proto:
@@ -38,14 +38,13 @@ clean:
 	rm -Rf dist/
 	rm -Rf abci.egg-info
 
-# PyPi package deploy
+# PyPi package deploy:
 # 1. build-dist
 # 2. test-pypi
 # 3. update-pypi
 build-dist:
 	python setup.py sdist
 
-# install twine with pipenv install -d
 test-pypi:
 	twine upload dist/* --repository testpypi
 

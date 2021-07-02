@@ -28,7 +28,6 @@ State Sync connection:
 - apply_snapshot_chunks()
 """
 
-# from .utils import str_to_bytes
 from tendermint.abci.types_pb2 import (
     RequestApplySnapshotChunk,
     RequestInitChain,

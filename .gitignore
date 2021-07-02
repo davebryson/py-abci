@@ -1,12 +1,10 @@
 .DS_Store
-*.pyc
-.cache/
-__pycache__/
+.vscode/
+build
 dist
 abci.egg-info/
+*.pyc
 .test_pyabci
-py_abci.egg-info
-pyabci.egg-info
 .pytest_cache
-build
-.vscode/
+__pycache__/
+
