@@ -4,7 +4,6 @@ verify_ssl = true
 
 [dev-packages]
 pytest = "*"
-pytest-pythonpath = "*"
 pytest-cov = "*"
 twine = "*"
 black = "*"
