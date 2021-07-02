@@ -10,7 +10,6 @@ black = "*"
 
 [packages]
 protobuf = "*"
-gevent = "*"
 colorlog = "*"
 
 [requires]

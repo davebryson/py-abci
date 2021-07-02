@@ -20,9 +20,6 @@ The way the app state is structured, you can also see the current state value
 in the tendermint console output.
 """
 import struct
-import abci.utils as util
-import argparse
-
 from abci import (
     ABCIServer,
     BaseApplication,
@@ -32,7 +29,7 @@ from abci import (
     ResponseDeliverTx,
     ResponseQuery,
     ResponseCommit,
-    CodeTypeOk,
+    OkCode,
 )
 
 # Tx encoding/decoding
@@ -75,17 +72,17 @@ class SimpleCounter(BaseApplication):
         if not value == (self.txCount + 1):
             # respond with non-zero code
             return ResponseCheckTx(code=1)
-        return ResponseCheckTx(code=CodeTypeOk)
+        return ResponseCheckTx(code=OkCode)
 
     def deliver_tx(self, tx) -> ResponseDeliverTx:
         """Simply increment the state"""
         self.txCount += 1
-        return ResponseDeliverTx(code=CodeTypeOk)
+        return ResponseDeliverTx(code=OkCode)
 
     def query(self, req) -> ResponseQuery:
         """Return the last tx count"""
         v = encode_number(self.txCount)
-        return ResponseQuery(code=CodeTypeOk, value=v, height=self.last_block_height)
+        return ResponseQuery(code=OkCode, value=v, height=self.last_block_height)
 
     def commit(self) -> ResponseCommit:
         """Return the current encode state value to tendermint"""
@@ -93,17 +90,10 @@ class SimpleCounter(BaseApplication):
         return ResponseCommit(data=hash)
 
 
-if __name__ == "__main__":
-    # Define argparse argument for changing proxy app port
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-p", type=int, help="Proxy app port")
-    args = parser.parse_args()
-    # Create the app
-    if args.p is None:
-        app = ABCIServer(
-            app=SimpleCounter()
-        )  # defaults to default port if -p not provided
-    else:
-        app = ABCIServer(app=SimpleCounter(), port=args.p)
-    # Run it
+def main():
+    app = ABCIServer(app=SimpleCounter())
     app.run()
+
+
+if __name__ == "__main__":
+    main()

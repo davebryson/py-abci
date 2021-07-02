@@ -28,31 +28,36 @@ State Sync connection:
 - apply_snapshot_chunks()
 """
 
+# Re-export all the protobufs so there available for use
 from tendermint.abci.types_pb2 import (
-    RequestApplySnapshotChunk,
-    RequestInitChain,
-    RequestListSnapshots,
-    RequestLoadSnapshotChunk,
-    RequestOfferSnapshot,
-    ResponseApplySnapshotChunk,
-    ResponseInitChain,
     RequestInfo,
     ResponseInfo,
-    ResponseDeliverTx,
+    RequestInitChain,
+    ResponseInitChain,
+    RequestCheckTx,
     ResponseCheckTx,
+    RequestDeliverTx,
+    ResponseDeliverTx,
     RequestQuery,
-    ResponseListSnapshots,
-    ResponseLoadSnapshotChunk,
-    ResponseOfferSnapshot,
     ResponseQuery,
     RequestBeginBlock,
     ResponseBeginBlock,
     RequestEndBlock,
     ResponseEndBlock,
     ResponseCommit,
+    RequestLoadSnapshotChunk,
+    ResponseLoadSnapshotChunk,
+    RequestListSnapshots,
+    ResponseListSnapshots,
+    RequestOfferSnapshot,
+    ResponseOfferSnapshot,
+    RequestApplySnapshotChunk,
+    ResponseApplySnapshotChunk,
 )
 
-CodeTypeOk = 0
+## Common codes used in a response
+OkCode = 0
+ErroCode = 1
 
 
 class BaseApplication:
@@ -86,7 +91,7 @@ class BaseApplication:
         This is called via the consensus connection.
         A non-zero response code implies an error and will reject the tx
         """
-        return ResponseDeliverTx(code=CodeTypeOk)
+        return ResponseDeliverTx(code=OkCode)
 
     def check_tx(self, tx: bytes) -> ResponseCheckTx:
         """
@@ -94,14 +99,14 @@ class BaseApplication:
         the tx will be added to Tendermint's mempool for consideration in a block.
         A non-zero response code implies an error and will reject the tx
         """
-        return ResponseCheckTx(code=CodeTypeOk)
+        return ResponseCheckTx(code=OkCode)
 
     def query(self, req: RequestQuery) -> ResponseQuery:
         """
         This is commonly used to query the state of the application.
         A non-zero 'code' in the response is used to indicate and error.
         """
-        return ResponseQuery(code=CodeTypeOk)
+        return ResponseQuery(code=OkCode)
 
     def begin_block(self, req: RequestBeginBlock) -> ResponseBeginBlock:
         """

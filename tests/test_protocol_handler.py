@@ -1,13 +1,12 @@
 from io import BytesIO
 
-from abci.server import ProtocolHandler
-from abci.application import BaseApplication, CodeTypeOk
-from abci.encoding import read_messages, write_message
+from abci import *
+from abci._server import ProtocolHandler
+from abci._utils import read_messages
 
 from tendermint.abci.types_pb2 import (
     Request,
     Response,
-    RequestEcho,
     RequestFlush,
     ResponseFlush,
     RequestInitChain,
@@ -32,9 +31,6 @@ from tendermint.abci.types_pb2 import (
 from tendermint.crypto.keys_pb2 import PublicKey
 
 
-# from abci.utils import str_to_bytes
-
-
 class ExampleApp(BaseApplication):
     def __init__(self):
         self.validators = []
@@ -51,14 +47,14 @@ class ExampleApp(BaseApplication):
         return ResponseInitChain()
 
     def check_tx(self, tx):
-        return ResponseCheckTx(code=CodeTypeOk, data=tx, log="bueno")
+        return ResponseCheckTx(code=OkCode, data=tx, log="bueno")
 
     def deliver_tx(self, tx):
-        return ResponseDeliverTx(code=CodeTypeOk, data=tx, log="bueno")
+        return ResponseDeliverTx(code=OkCode, data=tx, log="bueno")
 
     def query(self, req):
         d = req.data
-        return ResponseQuery(code=CodeTypeOk, value=d)
+        return ResponseQuery(code=OkCode, value=d)
 
     def begin_block(self, req):
         return ResponseBeginBlock()
@@ -86,10 +82,10 @@ def test_handler():
     assert isinstance(resp.flush, ResponseFlush)
 
     # Echo
-    req = Request(echo=RequestEcho(message="hello"))
-    raw = p.process("echo", req)
-    resp = __deserialze(raw)
-    assert resp.echo.message == "hello"
+    # req = Request(echo=RequestEcho(message="hello"))
+    # raw = p.process("echo", req)
+    # resp = __deserialze(raw)
+    # assert resp.echo.message == "hello"
 
     # Info
     req = Request(info=RequestInfo(version="16"))
@@ -114,7 +110,7 @@ def test_handler():
     req = Request(check_tx=RequestCheckTx(tx=b"helloworld"))
     raw = p.process("check_tx", req)
     resp = __deserialze(raw)
-    assert resp.check_tx.code == CodeTypeOk
+    assert resp.check_tx.code == OkCode
     assert resp.check_tx.data == b"helloworld"
     assert resp.check_tx.log == "bueno"
 
@@ -122,7 +118,7 @@ def test_handler():
     req = Request(deliver_tx=RequestDeliverTx(tx=b"helloworld"))
     raw = p.process("deliver_tx", req)
     resp = __deserialze(raw)
-    assert resp.deliver_tx.code == CodeTypeOk
+    assert resp.deliver_tx.code == OkCode
     assert resp.deliver_tx.data == b"helloworld"
     assert resp.deliver_tx.log == "bueno"
 
@@ -130,7 +126,7 @@ def test_handler():
     req = Request(query=RequestQuery(path="/dave", data=b"0x12"))
     raw = p.process("query", req)
     resp = __deserialze(raw)
-    assert resp.query.code == CodeTypeOk
+    assert resp.query.code == OkCode
     assert resp.query.value == b"0x12"
 
     # begin_block

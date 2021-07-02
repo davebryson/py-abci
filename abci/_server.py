@@ -1,31 +1,20 @@
 """
-ABCI TCP server
-Tendermint connects to this server over 4 different connections. 
-(see application.py for details)
 
-This can be a bit confusing in the app since gevent spawns a greenlet for each
-connection.  If one crashes you will not have full connectivity to Tendermint
 """
+import asyncio
 import signal
+from ._utils import *
 from io import BytesIO
-
-import gevent
-from gevent.event import Event
-from gevent.server import StreamServer
-
-from .encoding import read_messages, write_message
-from .utils import get_logger
-from .application import BaseApplication
-
 from tendermint.abci.types_pb2 import (
     Request,
     Response,
     ResponseException,
-    ResponseEcho,
     ResponseFlush,
 )
+from ._application import BaseApplication
 
-DEFAULT_ABCI_PORT = 26658
+DefaultABCIPort = 26658
+MaxReadInBytes = 64 * 1024
 
 log = get_logger()
 
@@ -42,11 +31,6 @@ class ProtocolHandler:
     def process(self, req_type, req):
         handler = getattr(self, req_type, self.no_match)
         return handler(req)
-
-    def echo(self, req):
-        msg = req.echo.message
-        response = Response(echo=ResponseEcho(message=msg))
-        return write_message(response)
 
     def flush(self, req):
         response = Response(flush=ResponseFlush())
@@ -118,73 +102,74 @@ class ProtocolHandler:
 
 
 class ABCIServer:
-    def __init__(self, port=DEFAULT_ABCI_PORT, app=None):
+    port: int
+    protocol: ProtocolHandler
+
+    def __init__(self, app: BaseApplication, port=DefaultABCIPort) -> None:
         if not app or not isinstance(app, BaseApplication):
-            log.error("Application missing or not an instance of Base Application")
+            log.error(
+                " Application missing or not an instance of ABCI Base Application"
+            )
             raise TypeError(
-                "Application missing or not an instance of Base Application"
+                "Application missing or not an instance of ABCI Base Application"
             )
         self.port = port
         self.protocol = ProtocolHandler(app)
-        self.server = StreamServer(("0.0.0.0", port), handle=self.__handle_connection)
 
-    def start(self):
-        self.server.start()
+    def run(self) -> None:
+        loop = asyncio.get_event_loop()
+        loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(stop()))
+        try:
+            log.info(" ~ running app - press CTRL-C to stop ~")
+            loop.run_until_complete(self.start())
+        except:
+            log.warn(" ... shutting down")
+        finally:
+            loop.stop()
 
-    def stop(self):
-        log.info("Shutting down server")
-        self.server.stop()
-
-    def run(self):
-        """
-        Start and watch for signals to stop the server
-        """
-        self.server.start()
-        log.info(" ABCIServer started on port: {}".format(self.port))
-
-        # wait for interrupt
-        evt = Event()
-        # Removed: no windows support
-        # gevent.signal_handler(signal.SIGQUIT, evt.set)
-        gevent.signal_handler(signal.SIGTERM, evt.set)
-        gevent.signal_handler(signal.SIGINT, evt.set)
-        evt.wait()
-
-        log.info("Shutting down server")
-        self.server.stop()
-
-    # TM will spawn off 4 connections: mempool, consensus, query, state sync.
-    # If an error happens in 1 it still leaves the others open which
-    # means you don't have all the connections available to TM
-    def __handle_connection(self, socket, address):
-        log.info(
-            " ... connection from Tendermint: {}:{} ...".format(address[0], address[1])
+    async def start(self) -> None:
+        self.server = await asyncio.start_server(
+            self._handler,
+            host="0.0.0.0",
+            port=self.port,
         )
+        await self.server.serve_forever()
+
+    async def _handler(
+        self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
+    ) -> None:
+        ip, socket, *_ = writer.get_extra_info("peername")
+        log.info(f" ... connection @ {ip}:{socket}")
+
         data = BytesIO()
         last_pos = 0
 
         while True:
-            # Create a new buffer every time.
-            # This avoids having a never ending buffer.
             if last_pos == data.tell():
                 data = BytesIO()
                 last_pos = 0
 
-            inbound = socket.recv(1024 * 8)  # 8KB
-            data.write(inbound)
-
-            if not len(inbound):
+            bits = await reader.read(MaxReadInBytes)
+            print(bits)
+            if len(bits) == 0:
+                log.error(" ... tendermint closed connection")
                 break
 
-            # Before reading the messages from the buffer, position the
-            # cursor at the end of the last read message.
+            data.write(bits)
             data.seek(last_pos)
-            messages = read_messages(data, Request)
 
-            for message in messages:
+            for message in read_messages(data, Request):
                 req_type = message.WhichOneof("value")
                 response = self.protocol.process(req_type, message)
-                socket.send(response)
+                writer.write(response)
                 last_pos = data.tell()
 
-        socket.close()
+        await stop()
+
+
+async def stop() -> None:
+    log.warn(" ... received exit signal")
+    tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
+    for task in tasks:
+        task.cancel()
+    await asyncio.gather(*tasks, return_exceptions=True)

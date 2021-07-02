@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup, find_packages
-from codecs import open
 from os import path
+from codecs import open
+from setuptools import setup, find_packages
 
 DIR = path.abspath(path.dirname(__file__))
 
@@ -25,13 +25,17 @@ setup(
         "Programming Language :: Python :: 3.9",
     ],
     keywords="blockchain tendermint abci",
-    packages=find_packages(exclude=["tests"]),
+    packages=["abci", "example"],
     install_requires=[
         "protobuf>=3.6.1",
-        "gevent>=1.3.7",
         "colorlog>=3.1.4",
         "pytest>=3.10.0",
         "pytest-cov>=2.6.0",
     ],
+    entry_points={
+        "console_scripts": [
+            "counter = example.counter:main",
+        ],
+    },
     python_requires=">=3.9",
 )

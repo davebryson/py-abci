@@ -1,4 +1,34 @@
 from io import BytesIO
+import logging, colorlog
+
+
+def get_logger():
+    logger = logging.getLogger("abci.app")
+
+    if logger.hasHandlers():
+        return logger
+
+    formatter = colorlog.ColoredFormatter(
+        "%(log_color)s%(levelname)-8s%(reset)s %(white)s%(message)s",
+        datefmt=None,
+        reset=True,
+        log_colors={
+            "DEBUG": "cyan",
+            "INFO": "green",
+            "WARNING": "yellow",
+            "ERROR": "red",
+            "CRITICAL": "red,bg_white",
+        },
+        secondary_log_colors={},
+        style="%",
+    )
+
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+
+    return logger
 
 
 def encode_varint(number):
@@ -46,18 +76,14 @@ def write_message(message):
 def read_messages(reader, message):
     """Return an interator of the messages found in
     the `reader` (BytesIO instance)."""
-
     while True:
         try:
             length = decode_varint(reader) >> 1
         except EOFError:
             return
-
         data = reader.read(length)
-
         if len(data) < length:
             return
-
         m = message()
         m.ParseFromString(data)
 

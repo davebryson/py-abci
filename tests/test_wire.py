@@ -1,6 +1,6 @@
 from io import BytesIO
 
-from abci.encoding import (
+from abci._utils import (
     write_message,
     read_messages,
 )
