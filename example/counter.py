@@ -1,8 +1,8 @@
 """
 Simple counting app.  It only accepts values sent to it in correct order.  The
-state maintains the current count. For example if starting at state 0, sending:
--> 0x01 = ok
--> 0x03 = fail (expects 2)
+state maintains the current count. For example, if starting at state 0, sending:
+-> 0x01 = OK!
+-> 0x03 = Will fail! (expects 2)
 
 To run it:
 - make a clean new directory for tendermint
@@ -14,7 +14,8 @@ To run it:
 curl http://localhost:26657/broadcast_tx_commit?tx=0x01
 curl http://localhost:26657/broadcast_tx_commit?tx=0x02
 ...
-to see the latest count:
+
+To see the latest count:
 curl http://localhost:26657/abci_query
 
 The way the app state is structured, you can also see the current state value
