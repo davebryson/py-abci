@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from os import path
-from codecs import open
-from setuptools import setup, find_packages
+from setuptools import setup
 
-DIR = path.abspath(path.dirname(__file__))
+LONG_DESC = """\
+Build Tendermint blockchain applications in Python.  It's fun
 
-with open(path.join(DIR, "README.rst"), encoding="utf-8") as f:
-    long_description = f.read()
+Supports: ABCI *0.17.0* and Tendermint *0.34.11*
+
+Check out the `home page <https://github.com/davebryson/py-abci>`_ for an example app and more information.
+"""
 
 setup(
     name="abci",
     version="0.8.0",
     description="Python based ABCI Server for Tendermint",
-    long_description=long_description,
-    long_description_content_type="text/x-rst",
+    long_description=LONG_DESC,
     url="https://github.com/davebryson/py-abci",
     author="Dave Bryson",
     license="Apache 2.0",
