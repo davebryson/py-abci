@@ -1,15 +1,16 @@
 """
-Simple counting app.  It only excepts values sent to it in order.  The
+Simple counting app.  It only accepts values sent to it in correct order.  The
 state maintains the current count. For example if starting at state 0, sending:
 -> 0x01 = ok
 -> 0x03 = fail (expects 2)
 
 To run it:
 - make a clean new directory for tendermint
-- start this server: python counter.py -p [application port]
-- port defaults to abci library default if not provided
+- start this server: python counter.py
 - start tendermint: tendermint --home "YOUR DIR HERE" node
 - The send transactions to the app:
+
+
 curl http://localhost:26657/broadcast_tx_commit?tx=0x01
 curl http://localhost:26657/broadcast_tx_commit?tx=0x02
 ...
@@ -17,7 +18,7 @@ to see the latest count:
 curl http://localhost:26657/abci_query
 
 The way the app state is structured, you can also see the current state value
-in the tendermint console output.
+in the tendermint console output (see app_hash).
 """
 import struct
 from abci import (
@@ -30,6 +31,7 @@ from abci import (
     ResponseQuery,
     ResponseCommit,
     OkCode,
+    ErrorCode,
 )
 
 # Tx encoding/decoding
@@ -50,7 +52,7 @@ class SimpleCounter(BaseApplication):
         will resync this app from the begining
         """
         r = ResponseInfo()
-        r.version = "1.0"
+        r.version = req.version
         r.last_block_height = 0
         r.last_block_app_hash = b""
         return r
@@ -70,12 +72,13 @@ class SimpleCounter(BaseApplication):
         """
         value = decode_number(tx)
         if not value == (self.txCount + 1):
-            # respond with non-zero code
-            return ResponseCheckTx(code=1)
+            return ResponseCheckTx(code=ErrorCode)
         return ResponseCheckTx(code=OkCode)
 
     def deliver_tx(self, tx) -> ResponseDeliverTx:
-        """Simply increment the state"""
+        """
+        We have a valid tx, increment the state.
+        """
         self.txCount += 1
         return ResponseDeliverTx(code=OkCode)
 

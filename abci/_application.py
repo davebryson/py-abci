@@ -1,27 +1,22 @@
 """
 Base Application
 
-Note:
-Tendermint creates 4 connections to the application below through the 
-server.  Each connection belongs to certain functions.  Tendermint automatically
-handles synchronization of these calls - they are linearlized by tendermint.
-
-The connections:
-Query connection:
+4 connections create by Tendermint:
+Query:
 - info()
 - query()
 
-Mempool connection:
+Mempool:
 - check_tx()
 
-Consensus connection:
+Consensus:
 - init_chain()
 - begin_block()
 - deliver_tx()
 - end_block()
 - commit()
 
-State Sync connection:
+State Sync:
 - list_snapshots()
 - offer_snapshots()
 - load_snapshot_chunks()
@@ -57,7 +52,7 @@ from tendermint.abci.types_pb2 import (
 
 ## Common codes used in a response
 OkCode = 0
-ErroCode = 1
+ErrorCode = 1
 
 
 class BaseApplication:

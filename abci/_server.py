@@ -1,6 +1,3 @@
-"""
-
-"""
 import asyncio
 import signal
 from ._utils import *
@@ -14,7 +11,7 @@ from tendermint.abci.types_pb2 import (
 from ._application import BaseApplication
 
 DefaultABCIPort = 26658
-MaxReadInBytes = 64 * 1024
+MaxReadInBytes = 64 * 1024  # Max we'll consume on a read stream
 
 log = get_logger()
 
@@ -28,84 +25,92 @@ class ProtocolHandler:
     def __init__(self, app):
         self.app = app
 
-    def process(self, req_type, req):
+    def process(self, req_type, req) -> bytes:
         handler = getattr(self, req_type, self.no_match)
         return handler(req)
 
-    def flush(self, req):
+    def flush(self, req) -> bytes:
         response = Response(flush=ResponseFlush())
         return write_message(response)
 
-    def info(self, req):
+    def info(self, req) -> bytes:
         result = self.app.info(req.info)
         response = Response(info=result)
         return write_message(response)
 
-    def check_tx(self, req):
+    def check_tx(self, req) -> bytes:
         result = self.app.check_tx(req.check_tx.tx)
         response = Response(check_tx=result)
         return write_message(response)
 
-    def deliver_tx(self, req):
+    def deliver_tx(self, req) -> bytes:
         result = self.app.deliver_tx(req.deliver_tx.tx)
         response = Response(deliver_tx=result)
         return write_message(response)
 
-    def query(self, req):
+    def query(self, req) -> bytes:
         result = self.app.query(req.query)
         response = Response(query=result)
         return write_message(response)
 
-    def commit(self, req):
+    def commit(self, req) -> bytes:
         result = self.app.commit()
         response = Response(commit=result)
         return write_message(response)
 
-    def begin_block(self, req):
+    def begin_block(self, req) -> bytes:
         result = self.app.begin_block(req.begin_block)
         response = Response(begin_block=result)
         return write_message(response)
 
-    def end_block(self, req):
+    def end_block(self, req) -> bytes:
         result = self.app.end_block(req.end_block)
         response = Response(end_block=result)
         return write_message(response)
 
-    def init_chain(self, req):
+    def init_chain(self, req) -> bytes:
         result = self.app.init_chain(req.init_chain)
         response = Response(init_chain=result)
         return write_message(response)
 
-    def list_snapshots(self, req):
+    def list_snapshots(self, req) -> bytes:
         result = self.app.list_snapshots(req.list_snapshots)
         response = Response(list_snapshots=result)
         return write_message(response)
 
-    def offer_snapshot(self, req):
+    def offer_snapshot(self, req) -> bytes:
         result = self.app.offer_snapshot(req.offer_snapshot)
         response = Response(offer_snapshot=result)
         return write_message(response)
 
-    def load_snapshot_chunk(self, req):
+    def load_snapshot_chunk(self, req) -> bytes:
         result = self.app.load_snapshot_chunk(req.load_snapshot_chunk)
         response = Response(load_snapshot_chunk=result)
         return write_message(response)
 
-    def apply_snapshot_chunk(self, req):
+    def apply_snapshot_chunk(self, req) -> bytes:
         result = self.app.apply_snapshot_chunk(req.apply_snapshot_chunk)
         response = Response(apply_snapshot_chunk=result)
         return write_message(response)
 
-    def no_match(self, req):
+    def no_match(self, req) -> bytes:
         response = Response(exception=ResponseException(error="ABCI request not found"))
         return write_message(response)
 
 
 class ABCIServer:
+    """
+    Async TCP server that speaks tendermint
+    """
+
     port: int
     protocol: ProtocolHandler
 
     def __init__(self, app: BaseApplication, port=DefaultABCIPort) -> None:
+        """
+        Requires App and an optional port if you changed the ABCI port on
+        Tendermint
+        """
         if not app or not isinstance(app, BaseApplication):
             log.error(
                 " Application missing or not an instance of ABCI Base Application"
@@ -117,17 +122,21 @@ class ABCIServer:
         self.protocol = ProtocolHandler(app)
 
     def run(self) -> None:
+        """
+        Call to run the server
+        """
         loop = asyncio.get_event_loop()
-        loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(stop()))
+        # Register a CTRL-C signal
+        loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(_stop()))
         try:
             log.info(" ~ running app - press CTRL-C to stop ~")
-            loop.run_until_complete(self.start())
+            loop.run_until_complete(self._start())
         except:
             log.warn(" ... shutting down")
         finally:
             loop.stop()
 
-    async def start(self) -> None:
+    async def _start(self) -> None:
         self.server = await asyncio.start_server(
             self._handler,
             host="0.0.0.0",
@@ -150,24 +159,34 @@ class ABCIServer:
                 last_pos = 0
 
             bits = await reader.read(MaxReadInBytes)
-            print(bits)
+            # print(bits)
             if len(bits) == 0:
                 log.error(" ... tendermint closed connection")
+                # break to the _stop if the connection stops
                 break
 
             data.write(bits)
             data.seek(last_pos)
 
+            ## Tendermint prefixes each serialized protobuf message
+            ## with varint encoded length. We use the 'data' buffer to
+            ## keep track of where we are in the byte stream and progress
+            ## based on the length encoding
             for message in read_messages(data, Request):
                 req_type = message.WhichOneof("value")
                 response = self.protocol.process(req_type, message)
                 writer.write(response)
                 last_pos = data.tell()
 
-        await stop()
+        # Any connection fails and we shut the whole thing down
+        await _stop()
 
 
-async def stop() -> None:
+async def _stop() -> None:
+    """
+    Clean up all async tasks.  Called on a signal or a connection closed by
+    tendermint
+    """
     log.warn(" ... received exit signal")
     tasks = [t for t in asyncio.all_tasks() if t is not asyncio.current_task()]
     for task in tasks:

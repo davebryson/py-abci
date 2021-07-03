@@ -74,7 +74,7 @@ def write_message(message):
 
 
 def read_messages(reader, message):
-    """Return an interator of the messages found in
+    """Return an interator over the messages found in
     the `reader` (BytesIO instance)."""
     while True:
         try:
