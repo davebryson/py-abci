@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 LONG_DESC = """\
 Build Tendermint blockchain applications in Python.  It's fun
@@ -13,7 +13,7 @@ Check out the `home page <https://github.com/davebryson/py-abci>`_ for an exampl
 
 setup(
     name="abci",
-    version="0.8.0",
+    version="0.8.1",
     description="Python based ABCI Server for Tendermint",
     long_description=LONG_DESC,
     url="https://github.com/davebryson/py-abci",
@@ -26,7 +26,7 @@ setup(
         "Programming Language :: Python :: 3.9",
     ],
     keywords="blockchain tendermint abci",
-    packages=["abci", "example"],
+    packages=find_packages(exclude=["tests"]),
     install_requires=[
         "protobuf>=3.6.1",
         "colorlog>=3.1.4",
