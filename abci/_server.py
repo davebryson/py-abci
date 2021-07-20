@@ -1,5 +1,9 @@
+"""
+TCP Server that communicates with Tendermint
+"""
 import asyncio
 import signal
+import platform
 from ._utils import *
 from io import BytesIO
 from tendermint.abci.types_pb2 import (
@@ -100,11 +104,8 @@ class ProtocolHandler:
 
 class ABCIServer:
     """
-    Async TCP server that speaks tendermint
+    Async TCP server
     """
-
-    port: int
-    protocol: ProtocolHandler
 
     def __init__(self, app: BaseApplication, port=DefaultABCIPort) -> None:
         """
@@ -123,16 +124,25 @@ class ABCIServer:
 
     def run(self) -> None:
         """
-        Call to run the server
+        Run the application
         """
+        # Check OS to handle signals appropriately
+        on_windows = platform.system() == "Windows"
+
         loop = asyncio.get_event_loop()
-        # Register a CTRL-C signal
-        loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(_stop()))
+        if not on_windows:
+            # Unix...register signal handlers
+            loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(_stop()))
+            loop.add_signal_handler(
+                signal.SIGTERM, lambda: asyncio.create_task(_stop())
+            )
         try:
             log.info(" ~ running app - press CTRL-C to stop ~")
             loop.run_until_complete(self._start())
         except:
             log.warn(" ... shutting down")
+            if on_windows:
+                loop.run_until_complete(_stop())
         finally:
             loop.stop()
 

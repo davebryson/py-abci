@@ -8,12 +8,12 @@ Build Tendermint blockchain applications in Python.  It's fun
 
 Supports: ABCI *0.17.0* and Tendermint *0.34.11*
 
-Check out the `home page <https://github.com/davebryson/py-abci>`_ for an example app and more information.
+See `home page <https://github.com/davebryson/py-abci>`_ for an example app and more information.
 """
 
 setup(
     name="abci",
-    version="0.8.1",
+    version="0.8.2",
     description="Python based ABCI Server for Tendermint",
     long_description=LONG_DESC,
     url="https://github.com/davebryson/py-abci",
