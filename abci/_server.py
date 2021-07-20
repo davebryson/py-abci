@@ -113,9 +113,6 @@ class ABCIServer:
         Tendermint
         """
         if not app or not isinstance(app, BaseApplication):
-            log.error(
-                " Application missing or not an instance of ABCI Base Application"
-            )
             raise TypeError(
                 "Application missing or not an instance of ABCI Base Application"
             )
@@ -169,7 +166,6 @@ class ABCIServer:
                 last_pos = 0
 
             bits = await reader.read(MaxReadInBytes)
-            # print(bits)
             if len(bits) == 0:
                 log.error(" ... tendermint closed connection")
                 # break to the _stop if the connection stops
