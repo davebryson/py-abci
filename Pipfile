@@ -7,6 +7,7 @@ pytest = "*"
 pytest-cov = "*"
 twine = "*"
 black = "*"
+build = "*"
 
 [packages]
 protobuf = "*"

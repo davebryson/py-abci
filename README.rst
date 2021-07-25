@@ -39,6 +39,12 @@ Coding
 See the ``counter.py`` application under the ``example`` directory
 here: https://github.com/davebryson/py-abci/blob/master/example/counter.py
 
+
+Local Dev 
+-------------------
+``pip install --editable '.[test]'
+
+
 Generating Protobufs
 -------------------
 You *ONLY* need to re-generate the protobuf files if you're updating this code base, not to create apps.  

@@ -11,7 +11,7 @@ tmparams = protos/tendermint/types/params.proto
 tmversions =  protos/tendermint/version/types.proto
 tmvalidator = protos/tendermint/types/validator.proto
 
-# You *only* need to run this to rebuild protobufs from the tendermint source
+# Only run this to rebuild/update protobufs from the tendermint source
 update-proto:
 	curl $(tendermint)/proto/tendermint/abci/types.proto > $(tmabci)
 	curl $(tendermint)/proto/tendermint/crypto/keys.proto > $(tmpubkey)
@@ -20,33 +20,32 @@ update-proto:
 	curl $(tendermint)/proto/tendermint/types/types.proto > $(tmtypes)
 	curl $(tendermint)/proto/tendermint/types/validator.proto > $(tmvalidator)
 	curl $(tendermint)/proto/tendermint/version/types.proto > $(tmversions)
-	curl $(tendermint)/version/version.go | grep -F -eTMVersionDefault -eABCISemVer > version.txt
-	python genproto.py
+	curl $(tendermint)/version/version.go | grep -F -eTMVersionDefault -eABCISemVer > tm_version.txt
+	@python build_proto.py
 
 test_tm:
-	rm -Rf .test_pyabci
-	tendermint --home .test_pyabci init
-	tendermint --home .test_pyabci node
+	@rm -Rf .test_pyabci
+	@tendermint --home .test_pyabci init
+	@tendermint --home .test_pyabci node
 
 test:
 	pytest .
 
-dev-install:
-	pip install --editable .
+dev:
+	pip install --editable '.[dev]'
 
 clean:
-	rm -Rf dist/
-	rm -Rf abci.egg-info
+	@rm -Rf dist/
 
 # PyPi package deploy:
 # 1. build-dist
 # 2. test-pypi
 # 3. update-pypi
 build-dist:
-	python setup.py sdist
+	python -m build
 
-test-pypi:
+publish-test:
 	twine upload dist/* --repository testpypi
 
-update-pypi:
+publish:
 	twine upload dist/* --repository pypi
