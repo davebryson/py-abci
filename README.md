@@ -85,7 +85,7 @@ If you're working directly on the code base.  Install a local editable version:
 
 `pip install --editable '.[test]'`
 
-## Updating the Protobuf code
+## Updating Protobuf code
 
 **You should only re-generate the protobuf code if you're updating the associated protobuf files, 
 and/or contributing to this code base.  You do not need to rebuild protos to create apps.**  
