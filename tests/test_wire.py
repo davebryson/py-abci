@@ -1,9 +1,6 @@
 from io import BytesIO
 
-from abci._utils import (
-    write_message,
-    read_messages,
-)
+from abci.utils import write_message, read_messages
 
 from tendermint.abci.types_pb2 import (
     Request,

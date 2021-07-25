@@ -1,9 +1,16 @@
+"""
+Various utils
+"""
 from io import BytesIO
 import logging, colorlog
+from google.protobuf.message import Message
 
 
-def get_logger():
-    logger = logging.getLogger("abci.app")
+def get_logger(name: str) -> logging.Logger:
+    """
+    Create a (colored) logger with the given name
+    """
+    logger = logging.getLogger(name)
 
     if logger.hasHandlers():
         return logger
@@ -31,7 +38,10 @@ def get_logger():
     return logger
 
 
-def encode_varint(number):
+def encode_varint(number: int) -> bytes:
+    """
+    Encode varint into bytes
+    """
     # Shift to int64
     number = number << 1
     buf = b""
@@ -46,7 +56,10 @@ def encode_varint(number):
     return buf
 
 
-def decode_varint(stream):
+def decode_varint(stream: BytesIO) -> int:
+    """
+    Decode bytes into int
+    """
     shift = 0
     result = 0
     while True:
@@ -58,14 +71,20 @@ def decode_varint(stream):
     return result
 
 
-def _read_one(stream):
+def _read_one(stream: BytesIO) -> int:
+    """
+    Read 1 byte, converting it into an int
+    """
     c = stream.read(1)
     if c == b"":
         raise EOFError("Unexpected EOF while reading bytes")
     return ord(c)
 
 
-def write_message(message):
+def write_message(message: Message) -> bytes:
+    """
+    Write length prefixed protobuf message
+    """
     buffer = BytesIO(b"")
     bz = message.SerializeToString()
     buffer.write(encode_varint(len(bz)))
@@ -73,9 +92,10 @@ def write_message(message):
     return buffer.getvalue()
 
 
-def read_messages(reader, message):
-    """Return an interator over the messages found in
-    the `reader` (BytesIO instance)."""
+def read_messages(reader: BytesIO, message: Message) -> Message:
+    """
+    Return an interator over the messages found in the byte stream
+    """
     while True:
         try:
             length = decode_varint(reader) >> 1

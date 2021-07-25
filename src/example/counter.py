@@ -22,18 +22,18 @@ The way the app state is structured, you can also see the current state value
 in the tendermint console output (see app_hash).
 """
 import struct
-from abci import (
-    ABCIServer,
-    BaseApplication,
+from tendermint.abci.types_pb2 import (
     ResponseInfo,
     ResponseInitChain,
     ResponseCheckTx,
     ResponseDeliverTx,
     ResponseQuery,
     ResponseCommit,
-    OkCode,
-    ErrorCode,
 )
+
+from abci.server import ABCIServer
+from abci.application import BaseApplication, OkCode, ErrorCode
+
 
 # Tx encoding/decoding
 
@@ -86,7 +86,9 @@ class SimpleCounter(BaseApplication):
     def query(self, req) -> ResponseQuery:
         """Return the last tx count"""
         v = encode_number(self.txCount)
-        return ResponseQuery(code=OkCode, value=v, height=self.last_block_height)
+        return ResponseQuery(
+            code=OkCode, value=v, height=self.last_block_height
+        )
 
     def commit(self) -> ResponseCommit:
         """Return the current encode state value to tendermint"""

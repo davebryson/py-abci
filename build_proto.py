@@ -4,16 +4,19 @@ Build protobuf files
 
 import os
 import sys
-import subprocess
 import shutil
+import subprocess
+
 
 protoc = shutil.which("protoc")
 
 
 def generate_proto(source):
-    """Invokes the Protocol Compiler to generate a _pb2.py from the given
+    """
+    Call the Protocol Compiler to generate a _pb2.py from the given
     .proto file.  Does nothing if the output already exists and is newer than
-    the input."""
+    the input.
+    """
 
     output = source.replace(".proto", "_pb2.py").replace("./protos/", ".")
 
@@ -43,6 +46,7 @@ if __name__ == "__main__":
         sys.stderr.write("protoc is not installed!\n")
         sys.exit(-1)
 
+    # Find all the protos
     proto_files = []
     for root, dirs, files in os.walk("protos"):
         for file in files:

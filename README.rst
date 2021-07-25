@@ -9,7 +9,10 @@
 
 Py-ABCI
 -------
-Build Tendermint blockchain applications in Python.  It's fun
+Build Tendermint blockchain applications in Python.  It's fun.
+
+
+This library provides the base functionality needed to create Tendermint ABCI application.
 
 Version
 -------
@@ -20,6 +23,11 @@ Installation
 Requires Python >= 3.9
 
 ``pip install abci``
+
+You'll need a binary version of the Tendermint engine. 
+Available here: https://github.com/tendermint/tendermint/releases
+
+*Make sure the Tendermint version you download matches the current support version of this library*
 
 Quick Start
 ---------------
@@ -36,26 +44,29 @@ Coding
 2. Implement the Tendermint ABCI callbacks - see https://docs.tendermint.com/v0.34/spec/abci
 3. Run it
 
-See the ``counter.py`` application under the ``example`` directory
-here: https://github.com/davebryson/py-abci/blob/master/example/counter.py
+See the ``counter.py`` application in the ``example`` directory
+here: https://github.com/davebryson/py-abci/blob/master/src/example/counter.py
 
 
 Local Dev 
 -------------------
+Install the code for local development:
+
 ``pip install --editable '.[test]'
 
 
 Generating Protobufs
 -------------------
-You *ONLY* need to re-generate the protobuf files if you're updating this code base, not to create apps.  
+You *should* only re-generate the protobuf files if you're updating this associated protobuf files, 
+and/or contributing to this code base.  You do not to rebuild protos to create apps.  
 
-A note on protobuf.  The primary code directory is ``abci``, but you'll notice additional 
+A note on protobuf:  The primary code directory is ``abci``, but you'll notice additional 
 directories: ``gogoproto``, ``tendermint``, and ``protos``. The ``gogoproto`` and ``tendermint``  
 directories are the protobuf generated code used by ``abci``. It adds proper Python modules and 
 preserves all the import statements used by Tendermint for the various protobuf files spread 
 across their codebase.  The ``protos`` directory is the source .proto files.
 
-To build the protobuf files:
+To (re)build the protobuf files:
 
-1. Install protoc so it's available as a command from a terminal
+1. Install protoc so it's available in your PATH as a command
 2. Run `make update-proto`

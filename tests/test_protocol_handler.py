@@ -1,8 +1,8 @@
 from io import BytesIO
 
-from abci import *
-from abci._server import ProtocolHandler
-from abci._utils import read_messages
+from abci.application import BaseApplication, OkCode
+from abci.server import ProtocolHandler
+from abci.utils import read_messages
 
 from tendermint.abci.types_pb2 import (
     Request,
@@ -38,7 +38,10 @@ class ExampleApp(BaseApplication):
     def info(self, req):
         v = req.version
         r = ResponseInfo(
-            version=v, data="hello", last_block_height=0, last_block_app_hash=b"0x12"
+            version=v,
+            data="hello",
+            last_block_height=0,
+            last_block_app_hash=b"0x12",
         )
         return r
 

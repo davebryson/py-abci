@@ -4,7 +4,7 @@ TCP Server that communicates with Tendermint
 import asyncio
 import signal
 import platform
-from ._utils import *
+from .utils import *
 from io import BytesIO
 from tendermint.abci.types_pb2 import (
     Request,
@@ -12,12 +12,12 @@ from tendermint.abci.types_pb2 import (
     ResponseException,
     ResponseFlush,
 )
-from ._application import BaseApplication
+from .application import BaseApplication
 
 DefaultABCIPort = 26658
 MaxReadInBytes = 64 * 1024  # Max we'll consume on a read stream
 
-log = get_logger()
+log = get_logger("abci.server")
 
 
 class ProtocolHandler:
@@ -26,10 +26,12 @@ class ProtocolHandler:
     Tendermint.  The handler delegates calls to your application
     """
 
+    app: BaseApplication
+
     def __init__(self, app):
         self.app = app
 
-    def process(self, req_type, req) -> bytes:
+    def process(self, req_type: str, req) -> bytes:
         handler = getattr(self, req_type, self.no_match)
         return handler(req)
 
@@ -98,7 +100,9 @@ class ProtocolHandler:
         return write_message(response)
 
     def no_match(self, req) -> bytes:
-        response = Response(exception=ResponseException(error="ABCI request not found"))
+        response = Response(
+            exception=ResponseException(error="ABCI request not found")
+        )
         return write_message(response)
 
 
@@ -106,6 +110,9 @@ class ABCIServer:
     """
     Async TCP server
     """
+
+    port: int
+    protocol: ProtocolHandler
 
     def __init__(self, app: BaseApplication, port=DefaultABCIPort) -> None:
         """
@@ -129,7 +136,9 @@ class ABCIServer:
         loop = asyncio.get_event_loop()
         if not on_windows:
             # Unix...register signal handlers
-            loop.add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(_stop()))
+            loop.add_signal_handler(
+                signal.SIGINT, lambda: asyncio.create_task(_stop())
+            )
             loop.add_signal_handler(
                 signal.SIGTERM, lambda: asyncio.create_task(_stop())
             )
