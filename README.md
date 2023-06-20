@@ -6,7 +6,7 @@
 Build Tendermint blockchain applications in Python.  It's fun.  This library provides the core functionality needed to create Tendermint ABCI applications.
 
 ## Supported Tendermint Version
-* Tendermint *0.34.11*
+* Tendermint *0.34.24*
 * ABCI *0.17.0*
 
 ## Installation

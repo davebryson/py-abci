@@ -15,7 +15,7 @@ def test_raw_decoding():
 
     # info + flush request
     # Note this is TM version specific!
-    inbound = b"\x1e\x1a\r\n\x070.34.11\x10\x0b\x18\x08\x04\x12\x00"
+    inbound = b"\x1e\x1a\r\n\x070.34.24\x10\x0b\x18\x08\x04\x12\x00"
     data = BytesIO(inbound)
 
     req_type = next(read_messages(data, Request))
