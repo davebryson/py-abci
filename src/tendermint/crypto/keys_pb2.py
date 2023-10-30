@@ -20,10 +20,10 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'tendermint.crypto.keys_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-  DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z8github.com/tendermint/tendermint/proto/tendermint/crypto'
-  _PUBLICKEY._options = None
-  _PUBLICKEY._serialized_options = b'\350\240\037\001\350\241\037\001'
+  _globals['DESCRIPTOR']._options = None
+  _globals['DESCRIPTOR']._serialized_options = b'Z8github.com/tendermint/tendermint/proto/tendermint/crypto'
+  _globals['_PUBLICKEY']._options = None
+  _globals['_PUBLICKEY']._serialized_options = b'\350\240\037\001\350\241\037\001'
   _globals['_PUBLICKEY']._serialized_start=73
   _globals['_PUBLICKEY']._serialized_end=141
 # @@protoc_insertion_point(module_scope)

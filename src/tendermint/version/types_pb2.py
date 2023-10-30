@@ -20,10 +20,10 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'tendermint.version.types_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-  DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z9github.com/tendermint/tendermint/proto/tendermint/version'
-  _CONSENSUS._options = None
-  _CONSENSUS._serialized_options = b'\350\240\037\001'
+  _globals['DESCRIPTOR']._options = None
+  _globals['DESCRIPTOR']._serialized_options = b'Z9github.com/tendermint/tendermint/proto/tendermint/version'
+  _globals['_CONSENSUS']._options = None
+  _globals['_CONSENSUS']._serialized_options = b'\350\240\037\001'
   _globals['_APP']._serialized_start=76
   _globals['_APP']._serialized_end=117
   _globals['_CONSENSUS']._serialized_start=119

@@ -35,6 +35,7 @@ def generate_proto(source):
             "-I./protos",
             "-I.",
             "--python_out=./src",
+            "--pyi_out=./src",
             source,
         ]
         if subprocess.call(protoc_command) != 0:

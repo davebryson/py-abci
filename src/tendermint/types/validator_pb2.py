@@ -21,10 +21,10 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'tendermint.types.validator_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-  DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z7github.com/tendermint/tendermint/proto/tendermint/types'
-  _VALIDATOR.fields_by_name['pub_key']._options = None
-  _VALIDATOR.fields_by_name['pub_key']._serialized_options = b'\310\336\037\000'
+  _globals['DESCRIPTOR']._options = None
+  _globals['DESCRIPTOR']._serialized_options = b'Z7github.com/tendermint/tendermint/proto/tendermint/types'
+  _globals['_VALIDATOR'].fields_by_name['pub_key']._options = None
+  _globals['_VALIDATOR'].fields_by_name['pub_key']._serialized_options = b'\310\336\037\000'
   _globals['_VALIDATORSET']._serialized_start=107
   _globals['_VALIDATORSET']._serialized_end=245
   _globals['_VALIDATOR']._serialized_start=248

@@ -20,10 +20,10 @@ _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'tendermint.crypto.proof_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
-  DESCRIPTOR._options = None
-  DESCRIPTOR._serialized_options = b'Z8github.com/tendermint/tendermint/proto/tendermint/crypto'
-  _PROOFOPS.fields_by_name['ops']._options = None
-  _PROOFOPS.fields_by_name['ops']._serialized_options = b'\310\336\037\000'
+  _globals['DESCRIPTOR']._options = None
+  _globals['DESCRIPTOR']._serialized_options = b'Z8github.com/tendermint/tendermint/proto/tendermint/crypto'
+  _globals['_PROOFOPS'].fields_by_name['ops']._options = None
+  _globals['_PROOFOPS'].fields_by_name['ops']._serialized_options = b'\310\336\037\000'
   _globals['_PROOF']._serialized_start=74
   _globals['_PROOF']._serialized_end=145
   _globals['_VALUEOP']._serialized_start=147
