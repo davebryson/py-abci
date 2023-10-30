@@ -21,7 +21,7 @@ update-proto:
 	curl $(tendermint)/proto/tendermint/types/validator.proto > $(tmvalidator)
 	curl $(tendermint)/proto/tendermint/version/types.proto > $(tmversions)
 	curl $(tendermint)/version/version.go | grep -F -eTMVersionDefault -eABCISemVer > tm_version.txt
-	@python build_proto.py
+	@python3 build_proto.py
 
 test_tm:
 	@rm -Rf .test_pyabci
@@ -42,7 +42,7 @@ clean:
 # 2. test-pypi
 # 3. update-pypi
 build-dist:
-	python -m build
+	python3 -m build
 
 publish-test:
 	twine upload dist/* --repository testpypi

@@ -1,8 +1,9 @@
+.idea/
 .DS_Store
 .vscode/
 build
 dist
-abci.egg-info/
+**/abci.egg-info/
 *.pyc
 .test_pyabci
 .pytest_cache
